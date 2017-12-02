@@ -1,50 +1,46 @@
 <?php muat_layout('header', ['title' => 'Masuk Ke Dasbor']); ?>
-  <div id="content">
     <!-- margin -->
     <h1>&nbsp;</h1>
     <h1>&nbsp;</h1>
     <!-- margin -->
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-          <div class="panel panel-default">
-            <div class="panel-heading text-center">
-              <div class="panel-title">APLIKASI PERPUSTAKAAN</div>
-            </div>
-            <div class="panel-body">
-              <?php
-                    if (!empty($variable['message'])
-                    && is_string($variable['message'])) {
-                        echo $variable['message'];
-                    }
-                ?>
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center">
+            <div class="panel-title">APLIKASI PERPUSTAKAAN</div>
+          </div>
+          <div class="panel-body">
+            <?php
+                  if (!empty($variable['message'])
+                  && is_string($variable['message'])) {
+                      echo $variable['message'];
+                  }
+              ?>
 
-              <form method="post" action="<?=router_url_login();?>">
-                <div class="form-group">
-                  <label for="username">Nama User:</label>
-                  <div class="input-group">
-                    <label for="username" class="input-group-addon">
-                      <i class="glyphicon glyphicon-user"></i>
-                    </label>
-                    <input type="text" id="username" name="username" class="form-control" value="" placeholder="Masukkan Username">
-                  </div>
+            <form method="post" action="<?=url_login();?>">
+              <div class="form-group">
+                <label for="username">Nama User:</label>
+                <div class="input-group">
+                  <label for="username" class="input-group-addon">
+                    <i class="glyphicon glyphicon-user"></i>
+                  </label>
+                  <input type="text" id="username" name="username" class="form-control" value="" placeholder="Masukkan Username">
                 </div>
-                <div class="form-group">
-                  <label for="password">Password:</label>
-                  <div class="input-group">
-                    <label for="password" class="input-group-addon">
-                      <i class="glyphicon glyphicon-lock"></i>
-                    </label>
-                    <input type="password" id="password" name="password" class="form-control" value="" placeholder="Masukkan Password">
-                  </div>
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="input-group">
+                  <label for="password" class="input-group-addon">
+                    <i class="glyphicon glyphicon-lock"></i>
+                  </label>
+                  <input type="password" id="password" name="password" class="form-control" value="" placeholder="Masukkan Password">
                 </div>
-                <div class="form-group">
-                  <p><button type="submit" class="btn btn-primary btn-block">Masuk</button></p>
-                </div>
-              </form>
-            </div>
-        </div>
+              </div>
+              <div class="form-group">
+                <p><button type="submit" class="btn btn-primary btn-block">Masuk</button></p>
+              </div>
+            </form>
+          </div>
       </div>
     </div>
-  </div>
 <?php muat_layout('footer');

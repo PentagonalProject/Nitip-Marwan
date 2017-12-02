@@ -107,3 +107,27 @@ function muat_layout($layout, $variable = [])
         include($layout);
     }
 }
+
+/**
+ * @return bool
+ */
+function is_404()
+{
+    return defined('NOT_FOUND_404') && NOT_FOUND_404;
+}
+
+/**
+ * @return bool
+ */
+function is_error()
+{
+    return defined('ERROR_CODE') && ERROR_CODE;
+}
+
+/**
+ * @return bool
+ */
+function is_found()
+{
+    return ! is_404() && defined('FOUND_200') && FOUND_200;
+}

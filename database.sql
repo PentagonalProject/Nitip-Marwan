@@ -12,6 +12,7 @@ CREATE TABLE `anggota` (
   nama_awal  VARCHAR(255) NOT NULL DEFAULT 'anonim',
   nama_akhir VARCHAR(255) DEFAULT NULL,
   email      VARCHAR(255) NOT NULL,
+  is_admin   BOOL NOT NULL DEFAULT FALSE,
   password   VARCHAR(60)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -28,11 +29,19 @@ ALTER TABLE `anggota`
 ALTER TABLE `anggota`
   MODIFY `id` BIGINT(11) NOT NULL AUTO_INCREMENT;
 
+
+
+-- delete admin
+DELETE FROM anggota WHERE user_name='admin';
+DELETE FROM anggota WHERE user_name='contoh';
+
 --
 -- tambahkan user - username = admin, password = password
 --
-INSERT INTO anggota(user_name, nama_awal, email, password)
-    VALUES ('admin', 'administrator', 'admin@example.com', sha1('password'));
+INSERT INTO anggota(user_name, nama_awal, email, password, is_admin)
+    VALUES ('admin', 'Administrator', 'admin@example.com', sha1('password'), TRUE);
+INSERT INTO anggota(user_name, nama_awal, email, password, is_admin)
+    VALUES ('contoh', 'User', 'user@example.com', sha1('password'), FALSE);
 
 --
 -- TAMBAHKAN DISINI

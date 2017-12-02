@@ -76,6 +76,33 @@ function is_login()
     return (bool) database_get_anggota($session['username']);
 }
 
+function is_admin()
+{
+    $userDetail = get_current_user_detail();
+    if (!$userDetail) {
+        return false;
+    }
+    return $userDetail['is_admin'];
+}
+
+/**
+ * @param string $username
+ *
+ * @return bool
+ */
+function is_user_is_admin($username)
+{
+    if (!is_string($username)) {
+        return false;
+    }
+    $user = database_get_anggota($username);
+    if (!$user) {
+        return false;
+    }
+
+    return $user['is_admin'];
+}
+
 /**
  * Buat Sesi Login
  *

@@ -83,8 +83,12 @@ function get_base_url_index($path = '')
 {
     static $fileName;
     if (!$fileName) {
-        $fileName =basename($_SERVER['SCRIPT_FILENAME']);
+        $fileName = '';
+        if ((!defined('REWRITE_URL') || !REWRITE_URL)) {
+            $fileName = basename($_SERVER['SCRIPT_FILENAME']);
+        }
     }
+
     if (!is_string($path)) {
         $path = (string) $path;
     }
@@ -134,11 +138,10 @@ function get_request_uri()
     $base_path   = get_base_path();
     if ($request_uri === $script_name) {
         $request_uri = '/';
-    } elseif (strpos($request_uri, "{$script_name}/") === 0) {
+    } elseif ((!defined('REWRITE_URL') || !REWRITE_URL) && strpos($request_uri, "{$script_name}/") === 0) {
         $request_uri = substr($request_uri, strlen($script_name));
-        if ($base_path !== '/') {
-            $request_uri = substr($request_uri, strlen($base_path));
-        }
+    } elseif ($base_path !== '/') {
+        $request_uri = substr($request_uri, strlen($base_path));
     }
 
     return $request_uri;
@@ -168,4 +171,50 @@ function redirect($target, $code = 301)
         echo "<script type='text/javascript'>window.location.href={$target};</script>";
     }
     exit(0);
+}
+
+/**
+ * url Untuk Login
+ *
+ * @return string
+ */
+function url_login()
+{
+    return get_base_url_index('masuk');
+}
+
+/**
+ * Url untuk logout
+ *
+ * @return string
+ */
+function url_keluar()
+{
+    return get_base_url_index('keluar');
+}
+
+/**
+ * Helper untuk check login
+ */
+function check_redirect_login_router()
+{
+    if (!is_login()) {
+        redirect(url_login());
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Helper untuk check login sebagai admin
+ */
+function check_redirect_admin_router()
+{
+    if (!is_admin()) {
+        redirect(url_login());
+        return false;
+    }
+
+    return true;
 }

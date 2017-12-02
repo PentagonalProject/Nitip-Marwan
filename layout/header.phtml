@@ -18,6 +18,50 @@
         : 'Dasbor';
   ?></title>
   <link rel="stylesheet" href="<?= get_base_url('assets/css/bootstrap.min.css');?>">
+  <link rel="stylesheet" href="<?= get_base_url('assets/css/app.css');?>">
 </head>
 <body>
   <div id="page" class="wrapper">
+    <div class="container-fluid">
+<?php
+    if (is_login() && is_found()) {
+?>
+      <div class="navigation" id="navigation">
+
+      </div>
+      <div id="sidebar">
+        <div class="navigation">
+            <ul>
+              <li><a href="<?= get_base_url_index();?>">Dasbor</a></li>
+              <li><a href="<?= get_base_url_index('buku/pinjaman');?>"><?= is_admin() ? 'Daftar Pinjaman' : 'Pinjamanku';?></a></li>
+              <?php
+              // apabila non admin
+              if (!is_admin()) {?>
+                <li><a href="<?= get_base_url_index('buku');?>">Daftar Buku</a></li>
+              <?php } ?>
+              <?php
+              // apabila admin
+              if (is_admin()) { ?>
+                  <li>
+                    <a href="<?= get_base_url_index('buku');?>">Buku</a>
+                    <ul>
+                      <li><a href="<?= get_base_url_index('buku');?>">Semua Buku</a></li>
+                      <li><a href="<?= get_base_url_index('buku/baru');?>">Tambah Buku</a></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <a href="<?= get_base_url_index('anggota');?>" class="dropdown-sidebar">Anggota</a>
+                    <ul>
+                      <li><a href="<?= get_base_url_index('anggota');?>">Semua Anggota</a></li>
+                      <li><a href="<?= get_base_url_index('anggota/baru');?>">Tambah Anggota</a></li>
+                    </ul>
+                  </li>
+              <?php } ?>
+              <li><a href="<?= get_base_url_index('profile');?>">Kelola Akun</a></li>
+              <li><a href="<?= url_keluar();?>">Keluar</a></li>
+            </ul>
+        </div>
+      </div>
+<?php } ?>
+      <div id="content" class="container">
+

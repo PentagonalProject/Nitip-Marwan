@@ -4,18 +4,28 @@
 // -----------------------------------------------------
 require __DIR__ .'/config.php';
 
+/**
+ * @var \Composer\Autoload\ClassLoader $autoload
+ */
 // -----------------------------------------------------
 // include autoload composer
 // -----------------------------------------------------
-require __DIR__ .'/vendor/autoload.php';
+$autoload = require __DIR__ .'/vendor/autoload.php';
+// register router class
+$autoload->add('', __DIR__ . '/app/routers/');
+// register class
+$autoload->register();
 
 // -----------------------------------------------------
 // include functions
 // -----------------------------------------------------
 require_once __DIR__ . '/app/functions/helper.php';
 require_once __DIR__ . '/app/functions/url.php';
-require_once __DIR__ . '/app/functions/database.php';
 require_once __DIR__ . '/app/functions/auth.php';
+require_once __DIR__ . '/app/functions/database.php';
+
+// database functions
+require_once __DIR__ . '/app/functions/database/anggota.php';
 
 // -----------------------------------------------------
 // Dispatch Router
@@ -27,7 +37,6 @@ $dispatcher = FastRoute\SimpleDispatcher(function (\FastRoute\RouteCollector $r)
     $require = function () {
         require_once __DIR__ . '/app/router.php';
     };
-
     // binding ke \FastRoute\RouteCollector
     $require->call($r);
 });
@@ -40,11 +49,14 @@ if (false !== $pos = strpos($uri, '?')) {
 
 $uri = rawurldecode($uri);
 $routeInfo = $dispatcher->dispatch(get_method(), $uri);
+$level = ob_get_level();
+ob_start();
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         header('Content-Type: text/html;charset=utf-8', 404);
         // ... 404 Not Found
         muat_layout('error/404', ['title' => '404 Halaman Tidak Ditemukan']);
+        define('NOT_FOUND_404', true);
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         header('Content-Type: text/html;charset=utf-8', 405);
@@ -58,6 +70,7 @@ switch ($routeInfo[0]) {
         );
         break;
     case FastRoute\Dispatcher::FOUND:
+        define('FOUND_200', true);
         $handler = $routeInfo[1];
         $vars    = $routeInfo[2];
         try {
@@ -66,9 +79,12 @@ switch ($routeInfo[0]) {
                     "Router handler is not callable"
                 );
             }
-            call_user_func_array($handler, (array) $vars);
+            call_user_func_array($handler, [$vars]);
             // ... call $handler with $vars
         } catch (\Exception $exception) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
             header('Content-Type: text/html;charset=utf-8', 500);
             muat_layout(
                 'error/500',

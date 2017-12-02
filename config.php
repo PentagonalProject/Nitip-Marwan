@@ -10,3 +10,5 @@ define('DB_USER', 'root');
 define('DB_PASS', 'mysql');
 // database name
 define('DB_NAME', 'perpus');
+// use pretty URL
+define('REWRITE_URL', true);
