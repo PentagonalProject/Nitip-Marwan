@@ -1,0 +1,33 @@
+<?php
+// muat header
+muat_layout(
+    'header',
+    [
+        'title' => 'Dasbor Perpustakaan'
+    ]
+);
+?>
+    <div id="content" class="container-fluid">
+      <div class="container">
+        <?php
+        /**
+         * CONTOH
+         */
+        ?>
+        <h1>INI HALAMAN UTAMA</h1>
+        <p>Anda Masuk Sebagai: <?= get_current_user_name();?></p>
+        <div class="row">
+          <div class="col-md-12">
+            <pre><?php
+                foreach (get_current_user_detail() as $key => $value) {
+                    $key = ucwords(str_replace('_', ' ', $key));
+                    echo "{$key}: {$value}\n";
+                }
+              ?></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+<?php
+// muat footer
+muat_layout('footer');

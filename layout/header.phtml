@@ -1,0 +1,23 @@
+<?php
+/**
+ * Berkas Header
+ */
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><?=
+        isset($variable)
+        && is_array($variable)
+        && isset($variable['title'])
+        && is_string($variable['title'])
+        ? htmlentities($variable['title'])
+        : 'Dasbor';
+  ?></title>
+  <link rel="stylesheet" href="<?= get_base_url('assets/css/bootstrap.min.css');?>">
+</head>
+<body>
+  <div id="page" class="wrapper">
