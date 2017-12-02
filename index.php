@@ -42,11 +42,12 @@ $uri = rawurldecode($uri);
 $routeInfo = $dispatcher->dispatch(get_method(), $uri);
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
-        header('Content-Type: text/html;charset=utf-8');
+        header('Content-Type: text/html;charset=utf-8', 404);
         // ... 404 Not Found
         muat_layout('error/404', ['title' => '404 Halaman Tidak Ditemukan']);
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        header('Content-Type: text/html;charset=utf-8', 405);
         // ... 405 Method Not Allowed
         muat_layout(
             'error/405',
@@ -68,6 +69,7 @@ switch ($routeInfo[0]) {
             call_user_func_array($handler, (array) $vars);
             // ... call $handler with $vars
         } catch (\Exception $exception) {
+            header('Content-Type: text/html;charset=utf-8', 500);
             muat_layout(
                 'error/500',
                 [
