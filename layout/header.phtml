@@ -28,6 +28,14 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
   <script type="text/javascript">
       // replace no-js with js
       document.documentElement.className = document.documentElement.className.replace("no-js","js");
+      var api_url = {
+          base : <?=json_encode(get_base_url_index('api'));?>,
+          judul:<?=json_encode(get_base_url_index('api/buku'));?>,
+          buku_pengarang:<?=json_encode(get_base_url_index('api/buku-pengarang'));?>,
+          pengarang:<?=json_encode(get_base_url_index('api/pengarang'));?>,
+          anggota:<?=json_encode(get_base_url_index('api/anggota'));?>
+
+      };
   </script>
   <link rel="icon" href="<?= get_base_url('assets/images/favicon.ico');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/css/bootstrap.min.css');?>">

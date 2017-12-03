@@ -23,12 +23,15 @@ class RouterBuku
 
         $pencarian = cari_buku_by_judul($nama_buku);
         $pencarian = is_array($pencarian) ? $pencarian : [];
-
-        echo json_encode([
+        $value = [
             "code" => 200,
             "total" => count($pencarian),
             "data" => $pencarian
-        ],JSON_PRETTY_PRINT);
+        ];
+        if (get('array') == 'true') {
+            $value = $value['data'];
+        }
+        echo json_encode($value,JSON_PRETTY_PRINT);
         exit(0);
     }
 
@@ -54,12 +57,15 @@ class RouterBuku
 
         $pencarian = cari_buku_by_pengarang($nama_pengarang);
         $pencarian = is_array($pencarian) ? $pencarian : [];
-
-        echo json_encode([
+        $value = [
             "code" => 200,
             "total" => count($pencarian),
             "data" => $pencarian
-        ],JSON_PRETTY_PRINT);
+        ];
+        if (get('array') == 'true') {
+            $value = $value['data'];
+        }
+        echo json_encode($value,JSON_PRETTY_PRINT);
         exit(0);
     }
 
@@ -86,11 +92,15 @@ class RouterBuku
         $pencarian = cari_pengarang_dari_buku($nama_pengarang);
         $pencarian = is_array($pencarian) ? $pencarian : [];
 
-        echo json_encode([
+        $value = [
             "code" => 200,
             "total" => count($pencarian),
             "data" => $pencarian
-        ],JSON_PRETTY_PRINT);
+        ];
+        if (get('array') == 'true') {
+            $value = $value['data'];
+        }
+        echo json_encode($value,JSON_PRETTY_PRINT);
         exit(0);
     }
 

@@ -10,7 +10,7 @@ CREATE TABLE `anggota` (
   id BIGINT(10) NOT NULL,
   user_name   VARCHAR(100) NOT NULL COMMENT 'User name unik',
   nama_awal  VARCHAR(255) NOT NULL DEFAULT 'anonim' COMMENT 'Nama awalan default anonim',
-  nama_akhir VARCHAR(255) DEFAULT NULL COMMENT 'Nama akhiran anggota',
+  nama_belakang VARCHAR(255) DEFAULT NULL COMMENT 'Nama akhiran anggota',
   email      VARCHAR(255) NOT NULL COMMENT 'Email anggota',
   is_admin   BOOL NOT NULL DEFAULT FALSE COMMENT 'Boolean apabila admin set ke true',
   password   VARCHAR(60) COMMENT 'Password sha1(string password)'

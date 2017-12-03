@@ -7,5 +7,101 @@ muat_layout(
     ]
 );
 ?>
+    <div class="row">
+      <div class="col-md-12">
+        <form method="post" action="<?= get_base_url_index('profile');?>">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Kelola Akun</h1>
+                </div>
+                <div class="panel-body">
+                    <?php
+                    if (!empty($variable['message'])
+                        && is_string($variable['message'])) {
+                        echo $variable['message'];
+                    }
+                    ?>
+                    <table class="table table-responsive">
+                        <?php
+                            $current_user = get_current_user_detail();
+                            $list = [
+                                'user_id' => [
+                                    'label' => 'User ID',
+                                    'value' => $current_user['id'],
+                                ],
+                                'user_name' => [
+                                    'label' => 'User Name',
+                                    'value' => $current_user['user_name'],
+                                ],
+                                'nama_awal' => [
+                                    'label' => 'Nama Awal',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'minlength'=> 3,
+                                        'maxlength'=> 255,
+                                        'value' => $current_user['nama_awal'],
+                                        'required' => 'required'
+                                    ],
+                                ],
+                                'nama_belakang' => [
+                                    'label' => 'Nama Belakang',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'minlength'=> 0,
+                                        'maxlength'=> 255,
+                                        'value' => $current_user['nama_belakang'],
+                                    ],
+                                ],
+                                'email' => [
+                                    'label' => 'Alamat Email',
+                                    'input' => [
+                                        'type' => 'email',
+                                        'maxlength'=> 255,
+                                        'value' => $current_user['email'],
+                                        'required' => 'required'
+                                    ],
+                                ],
+                            ];
+
+                            foreach ($list as $name => $value) {
+                                if (!isset($value['input'])) {
+                                ?>
+                                    <tr>
+                                        <td width="180"><label for="user-<?= $name;?>"><?=$value['label'];?></label></td>
+                                        <td><?= $value['value'];?></td>
+                                    </tr>
+
+                                <?php
+                                    continue;
+                                }
+                                $attr = "";
+                                foreach ($value['input'] as $k => $n) {
+                                    $n = htmlspecialchars($n, ENT_QUOTES);
+                                    $attr .= "{$k}=\"{$n}\" ";
+                                }
+                        ?>
+                                <tr>
+                                    <td width="180"><label for="user-<?= $name;?>"><?=$value['label'];?></label></td>
+                                    <td><input class="form-control" <?= $attr;?>name="user[<?= $name;?>]" id="user-<?= $name;?>" placeholder="Masukkan <?= $value['label'];?>"></td>
+                                </tr>
+
+                        <?php } ?>
+                        <tr>
+                          <td width="180"><label for="user-password">Password</label></td>
+                          <td>
+                              <input class="form-control" name="user[password]" id="user-password" placeholder="Masukkan Password">
+                            <em><small>Kosongi jika tidak ingin mengubah password</small></em>
+                          </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
 <?php
 muat_layout('footer');

@@ -78,7 +78,7 @@ function database_update_anggota($username, array $data)
         'user_name',
         'password',
         'nama_awal',
-        'nama_akhir',
+        'nama_belakang',
         'email',
         'is_admin'
     ];
@@ -104,16 +104,19 @@ function database_update_anggota($username, array $data)
             $value = (bool) $value;
         }
         $values[] = $value;
-        $set = " SET {$key}=?, ";
+        $set .= "{$key}=?, ";
     }
 
     if (empty($values)) {
         return false;
     }
 
-    $set = trim($set, ', ');
+    $set = 'SET '. trim($set, ', ');
     $values[] = $username;
-    return database_execute("UPDATE anggota {$set} WHERE username=?", $values);
+    return database_execute(
+        "UPDATE anggota {$set} WHERE user_name=?",
+        $values
+    );
 }
 
 /**
@@ -131,7 +134,7 @@ function database_update_anggota_by_id($id, array $data)
         'user_name',
         'password',
         'nama_awal',
-        'nama_akhir',
+        'nama_belakang',
         'email',
         'is_admin'
     ];
@@ -157,14 +160,14 @@ function database_update_anggota_by_id($id, array $data)
             $value = (bool) $value;
         }
         $values[] = $value;
-        $set = " SET {$key}=?, ";
+        $set .= "{$key}=?, ";
     }
 
     if (empty($values)) {
         return false;
     }
 
-    $set = trim($set, ', ');
+    $set = 'SET '.trim($set, ', ');
     $values[] = abs($id);
     return database_execute("UPDATE anggota {$set} WHERE id=?", $values);
 }
@@ -234,7 +237,7 @@ function database_create_anggota(array $data)
         'user_name',
         'password',
         'nama_awal',
-        'nama_akhir',
+        'nama_belakang',
         'email',
         'is_admin'
     ];
@@ -358,8 +361,8 @@ function cari_anggota_by_username($username = '', $offset = 0, $limit = 100)
     }
     $return = [];
     if (is_object($loop) && !empty($loop->fields)) {
-        foreach ((array) $loop->fields as $key => $value) {
-            $return[$value['id']] = $value;
+        foreach ($loop as $key => $value) {
+            $return[] = $value;
         }
     }
     return $return;

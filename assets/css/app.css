@@ -12,26 +12,31 @@ body {
     position: relative;
     margin: .5em 0;
 }
+
 .card.no-margin {
-    margin:0;
+    margin: 0;
 }
+
 .card:after,
 .card:before {
     clear: both;
     content: '';
     display: table;
 }
+
 .card .card-header {
     display: block;
     padding: 10px;
-    border-bottom: 1px solid rgba(0,0,0,.1);
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
 }
+
 .card.no-body .card-header {
-    border-bottom-width:0;
-    box-shadow: rgba(0, 0,0, .3) 0 2px 1px;
+    border-bottom-width: 0;
+    box-shadow: rgba(0, 0, 0, .3) 0 2px 1px;
 }
+
 .card.no-body .card-header {
     border-radius: 3px;
 }
@@ -40,12 +45,14 @@ body {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 4px;
     background-color: #fff;
-    border-top: 1px solid rgba(0,0,0,.2);
+    border-top: 1px solid rgba(0, 0, 0, .2);
 }
+
 .card.no-radius .card-header {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
 .card.no-radius .card-header,
 .card.no-radius .card-body {
     border-radius: 0;
@@ -54,9 +61,11 @@ body {
 .card .card-header.fix-height-150 {
     height: 150px;
 }
+
 .card .card-header.fix-height-200 {
     height: 200px;
 }
+
 .card .card-header.fix-height-100 {
     height: 100px;
 }
@@ -69,96 +78,115 @@ body {
     color: #444;
     background-color: #ecf0f1;
 }
+
 .bg-turquoise,
 .card.card-turquoise .card-header {
     color: #ecf0f1;
     background-color: #1abc9c;
 }
+
 .bg-emerald,
 .card.card-emerald .card-header {
     color: #ecf0f1;
     background-color: #2ecc71;
 }
+
 .bg-peter,
 .card.card-peter .card-header {
     color: #ecf0f1;
     background-color: #3498db;
 }
+
 .bg-amethyst,
 .card.card-amethyst .card-header {
     color: #ecf0f1;
     background-color: #9b59b6;
 }
+
 .bg-asphalt,
 .card.card-asphalt .card-header {
     color: #ecf0f1;
     background-color: #34495e;
 }
+
 .bg-green-sea,
 .card.card-green-sea .card-header {
     color: #ecf0f1;
     background-color: #16a085;
 }
+
 .bg-nephritis,
 .card.card-nephritis .card-header {
     color: #ecf0f1;
     background-color: #27ae60;
 }
+
 .bg-belize,
 .card.card-belize .card-header {
     color: #ecf0f1;
     background-color: #2980b9;
 }
+
 .bg-wisteria,
 .card.card-wisteria .card-header {
     color: #ecf0f1;
     background-color: #8e44ad;
 }
+
 .bg-midnight-blue,
 .card.card-midnight-blue .card-header {
     color: #ecf0f1;
     background-color: #2c3e50;
 }
+
 .bg-sunflower,
 .card.card-sunflower .card-header {
     color: #ecf0f1;
     background-color: #f1c40f;
 }
+
 .bg-carrot,
 .card.card-carrot .card-header {
     color: #ecf0f1;
     background-color: #e67e22;
 }
+
 .bg-alizarin,
 .card.card-alizarin .card-header {
     color: #ecf0f1;
     background-color: #e74c3c;
 }
+
 .bg-concrete,
 .card.card-concrete .card-header {
     color: #ecf0f1;
     background-color: #95a5a6;
 }
+
 .bg-orange,
 .card.card-orange .card-header {
     color: #ecf0f1;
     background-color: #f39c12;
 }
+
 .bg-pumpkin,
 .card.card-pumpkin .card-header {
     color: #ecf0f1;
     background-color: #d35400;
 }
+
 .bg-pomer-granate,
 .card.card-pomer-granate .card-header {
     color: #ecf0f1;
     background-color: #c0392b;
 }
+
 .bg-silver,
 .card.card-silver .card-header {
     color: #444;
     background-color: #bdc3c7;
 }
+
 .bg-asbestos,
 .card.card-asbestos .card-header {
     color: #fff;
@@ -170,25 +198,33 @@ body {
 body.tamu {
     background-color: #34495e;
 }
+
 /* Content If Login
  -------------------------- */
 .login #content {
     margin-left: 200px;
 }
+
 #form-login {
     margin-top: 22vh;
 }
+
 /* OVERRIDE
  -------------------- */
 .panel-title {
     letter-spacing: 1px;
 }
+
+.panel-body .table td {
+    vertical-align: middle;
+}
+
 /* SIDEBAR
  -------------------------- */
 #sidebar {
     position: fixed;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     bottom: 0;
     width: 200px;
 }
@@ -196,17 +232,17 @@ body.tamu {
 #sidebar .navigation {
     background-color: #34495e;
     color: #fff;
-    padding:0;
+    padding: 0;
     position: absolute;
-    left:0;
-    right:0;
-    top:0;
-    bottom:0;
-    overflow:visible;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: visible;
 }
 
 #sidebar .navigation ul {
-    margin-bottom:0;
+    margin-bottom: 0;
     list-style: none;
     padding: 0;
     font-size: 13px;
@@ -214,29 +250,32 @@ body.tamu {
 }
 
 #sidebar .navigation > ul {
-    overflow-x:hidden;
+    overflow-x: hidden;
     position: absolute;
-    left:0;
-    right:0;
-    top:180px;
-    bottom:0;
+    left: 0;
+    right: 0;
+    top: 190px;
+    bottom: 0;
     padding: 10px 0 20px 0;
     overflow-y: auto;
 }
 
 #sidebar .navigation ul li a {
     padding: 8px 10px;
-    display:block;
+    display: block;
     color: #fff;
     text-decoration: none;
 }
+
 #sidebar .navigation > ul > li > ul {
     padding: 10px 0;
-    background-color: rgba(0,0,0, .2);
+    background-color: rgba(0, 0, 0, .2);
 }
+
 #sidebar .navigation > ul > li > ul {
     display: none;
 }
+
 .no-js #sidebar .navigation > ul > li > ul,
 #sidebar .navigation > ul > li > ul.active {
     display: block;
@@ -249,38 +288,45 @@ body.tamu {
 .my-profile {
     display: block;
     padding: 20px 0;
-    height: 180px;
-    overflow:hidden;
-    position:relative;
+    height: 190px;
+    overflow: hidden;
+    position: relative;
 }
+
 .icon-big {
     font-size: 4em;
 }
+
 .icon-big-smaller {
     font-size: 3em;
 }
+
 .my-profile .profile-name {
     padding: 5px 0;
     font-size: 12px;
 }
 
-.my-profile  .text-button {
+.my-profile .text-button {
     position: relative;
     background-color: #95a5a6;
     padding: 10px;
     margin-bottom: 1em;
 }
-.my-profile  .text-button:after,
-.my-profile  .text-button:before {
+
+.my-profile .text-button:after,
+.my-profile .text-button:before {
     clear: both;
     display: table;
     content: '';
 }
+
+
 .my-profile .text-button a {
     text-align: center;
     background-color: #34495e;
     color: #fff;
     padding: 5px 0;
+    margin: 5px 0;
     border-radius: 3px;
     text-decoration: none;
     display: block;
@@ -294,14 +340,21 @@ body.tamu {
     background-color: #e74c3c;
 }
 
+@media (max-width: 1020px) {
+    .my-profile .row .col-md-6 {
+        float:left;
+        width: 50%;
+    }
+}
 /* TITLE MAP
  -------------------------- */
 .title-map {
-    position:relative;
+    position: relative;
     padding: 10px 0 15px;
     border-bottom: 1px solid #ddd;
     margin: 1em 0 .5em;
 }
+
 .title-map h1 {
     color: #777;
     font-size: 13px;
@@ -315,6 +368,41 @@ body.tamu {
     font-size: 15em;
     margin-top: 20vh;
 }
+
 .error-desc {
     font-size: 1.5em;
+}
+
+/* AUTO COMPLETE
+ ------------------------ */
+.autocomplete-suggestions {
+    border: 1px solid #999;
+    border-radius: 0 0 3px 3px;
+    margin-top: -2px;
+    background: #FFF;
+    overflow: auto;
+}
+
+.autocomplete-suggestion {
+    padding: 5px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+    font-weight: normal;
+    color: #3399FF;
+}
+
+.autocomplete-group {
+    padding: 2px 5px;
+}
+
+.autocomplete-group strong {
+    display: block;
+    border-bottom: 1px solid #000;
 }

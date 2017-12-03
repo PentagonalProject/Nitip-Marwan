@@ -71,7 +71,7 @@ function get_base_url($path = '')
     $path = ltrim($path);
     $query = explode('?', $path);
     $query[0] = ltrim(preg_replace('/(\\\|\/)+/', '/', $query[0]), '/');
-    return $base_url .'/' . implode('/', $query);
+    return $base_url .'/' . implode('?', $query);
 }
 
 /**

@@ -84,8 +84,8 @@ function cari_buku_by_judul($nama, $limit = 100)
     }
     $return = [];
     if (is_object($loop) && !empty($loop->fields)) {
-        foreach ((array) $loop->fields as $key => $value) {
-            $return[$value['id']] = $value;
+        foreach ($loop as $key => $value) {
+            $return[] = $value;
         }
     }
     return $return;
@@ -126,8 +126,8 @@ function cari_buku_by_pengarang($nama_pengarang = '', $offset = 0, $limit = 100)
 
     $return = [];
     if (is_object($loop) && !empty($loop->fields)) {
-        foreach ((array) $loop->fields as $key => $value) {
-            $return[$value['id']] = $value;
+        foreach ($loop as $key => $value) {
+            $return[] = $value;
         }
     }
     return $return;
@@ -170,8 +170,8 @@ function cari_pengarang_dari_buku($nama_pengarang = '', $offset = 0, $limit = 10
 
     $return = [];
     if (is_object($loop) && !empty($loop->fields)) {
-        foreach ((array) $loop->fields as $key => $value) {
-            $return[$value['id']] = $value;
+        foreach ($loop as $key => $value) {
+            $return[] = $value;
         }
     }
     return $return;

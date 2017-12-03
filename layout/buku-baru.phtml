@@ -7,5 +7,134 @@ muat_layout(
     ]
 );
 ?>
+      <div class="row">
+        <div class="col-md-12">
+          <form method="post" action="<?= get_base_url_index('buku/baru');?>">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Tambahkan Buku</h1>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-responsive">
+                        <tbody>
+                        <?php
+                            $list = [
+                                'judul'     => [
+                                    'label' => 'Judul Buku',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'maxlength' => '255',
+                                        'value' => ''
+                                    ]
+                                ],
+                                'pengarang' => [
+                                    'label' => 'Pengarang Buku',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'maxlength' => '255',
+                                        'data-autocomplete' => 'pengarang',
+                                        'value' => ''
+                                    ]
+                                ],
+                                'penerbit' => [
+                                    'label' => 'Penerbit Buku',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'maxlength' => '255',
+                                        'data-autocomplete' => 'penerbit',
+                                        'value' => ''
+                                    ]
+                                ],
+                                'tahun'  => [
+                                    'label' => 'Tahun Buku',
+                                    'input' => [
+                                        'type'     => 'number',
+                                        'pattern'  => '[0-9]',
+                                        'minlength' => 4,
+                                        'maxlength' => 4,
+                                        'min' => 1800,
+                                        'max' => abs(date('Y')) + 20,
+                                        'value' => date('Y')
+                                    ]
+                                ],
+                                /*
+                                'tanggal_pinjam' => [
+                                    'label' => 'Tanggal Peminjaman',
+                                    'input' => [
+                                        'type' => 'date',
+                                        'value' => date('Y-m-d')
+                                    ]
+                                ],*/
+                            ];
+                            foreach ($list as $name => $value) {
+                                $attr = "";
+                                foreach ($value['input'] as $k => $n) {
+                                    $n = htmlspecialchars($n, ENT_QUOTES);
+                                    $attr .= "{$k}=\"{$n}\" ";
+                                }
+                            ?>
+
+                                <tr>
+                                    <td width="180"><label for="buku-<?= $name;?>"><?=$value['label'];?></label></td>
+                                    <td><input class="form-control" <?= $attr;?>name="buku[<?= $name;?>]" id="buku-<?= $name;?>" placeholder="Masukkan <?= $value['label'];?>" required></td>
+                                </tr>
+
+                            <?php } ?>
+                                <tr>
+                                    <td width="180"><label for="buku-path_gambar">Cover Buku</label></td>
+                                    <td>
+                                        <input class="form-control" type="file" name="buku[path_gambar]" id="buku-path_gambar" placeholder="Masukkan Gambar Cover Buku" accept="image/*">
+                                        <div class="preview-gambar" data-preview="buku-path_gambar">
+                                        </div>
+                                    </td>
+                                </tr>
+                        <?php /*
+                            <tr>
+                                <td width="180">
+                                    <label for="buku-pukul">Jam Peminjaman</label>
+                                </td>
+                                <td id="buku-pukul">
+                                    <div class="form-group form-inline">
+                                        <label for="buku-jam">Jam</label> &nbsp;&nbsp;
+                                        <select name="bukup[jam]" class="form-control" id="buku-jam">
+                                            <?php
+                                                $hour = abs(date('H'));
+                                                foreach (range(1, 24) as $v) {
+                                                    $selected = $v === $hour ? ' selected' : '';
+                                            ?>
+                                                    <option value="<?= $v;?>"<?=$selected;?>><?=$v;?></option>
+                                            <?php
+                                                }
+                                            ?>
+                                        </select>
+                                        &nbsp;&nbsp;
+                                        <label for="buku-menit">Menit</label> &nbsp;&nbsp;
+                                        <select name="bukup[menit]" class="form-control" id="buku-menit">
+                                            <?php
+                                                $minute = abs(date('i'));
+                                                foreach (range(0, 59) as $v) {
+                                                    $selected = $v === $minute ? ' selected' : '';
+                                            ?>
+                                                    <option value="<?= $v;?>"<?=$selected;?>><?=$v;?></option>
+                                            <?php
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            */?>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- .panel-body -->
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+          </form>
+        </div>
+      </div>
 <?php
 muat_layout('footer');

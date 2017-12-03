@@ -20,15 +20,11 @@ muat_layout(
         </div>
         <div class="col-md-4 col-xs-4">
           <div class="card no-body card-asphalt">
-            <div class="card-header fix-height-<?= is_admin() ? '200' : '150';?> text-center">
+            <div class="card-header fix-height-150 text-center">
               <div class="panel-title">
                 <h4>Total Anggota</h4>
               </div>
               <div class="icon-big-smaller text-center"><?= is_admin() ? database_get_jumlah_anggota() : database_get_jumlah_non_admin();?></div>
-              <?php if (is_admin()) { ?>
-                <p>Total anggota admin: <span class="label label-info"><?= database_get_jumlah_admin();?></span></p>
-                <p>Total anggota non admin: <span class="label label-info"><?= database_get_jumlah_non_admin();?></span></p>
-              <?php } ?>
             </div>
           </div>
         </div>
@@ -46,6 +42,12 @@ muat_layout(
       <div class="row">
         <div class="col-md-12">
           <p>&nbsp;</p>
+          <?php if (is_admin()) { ?>
+              <div class="alert alert-info">
+                <p>Total anggota admin: <span class="label label-info"><?= database_get_jumlah_admin();?></span></p>
+                <p>Total anggota non admin: <span class="label label-info"><?= database_get_jumlah_non_admin();?></span></p>
+              </div>
+          <?php } ?>
           <div class="panel panel-default">
             <div class="panel-heading">
               <h2 class="panel-title">Selamat Datang, <span class="label label-info"><?=htmlentities(get_current_first_name());?></span></h2>
