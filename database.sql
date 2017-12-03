@@ -8,12 +8,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `anggota` (
   id BIGINT(10) NOT NULL,
-  user_name   VARCHAR(100) NOT NULL,
-  nama_awal  VARCHAR(255) NOT NULL DEFAULT 'anonim',
-  nama_akhir VARCHAR(255) DEFAULT NULL,
-  email      VARCHAR(255) NOT NULL,
-  is_admin   BOOL NOT NULL DEFAULT FALSE,
-  password   VARCHAR(60)
+  user_name   VARCHAR(100) NOT NULL COMMENT 'User name unik',
+  nama_awal  VARCHAR(255) NOT NULL DEFAULT 'anonim' COMMENT 'Nama awalan default anonim',
+  nama_akhir VARCHAR(255) DEFAULT NULL COMMENT 'Nama akhiran anggota',
+  email      VARCHAR(255) NOT NULL COMMENT 'Email anggota',
+  is_admin   BOOL NOT NULL DEFAULT FALSE COMMENT 'Boolean apabila admin set ke true',
+  password   VARCHAR(60) COMMENT 'Password sha1(string password)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -42,6 +42,19 @@ INSERT INTO anggota(user_name, nama_awal, email, password, is_admin)
     VALUES ('admin', 'Administrator', 'admin@example.com', sha1('password'), TRUE);
 INSERT INTO anggota(user_name, nama_awal, email, password, is_admin)
     VALUES ('contoh', 'User', 'user@example.com', sha1('password'), FALSE);
+
+
+CREATE TABLE `buku` (
+  id BIGINT(10) NOT NULL,
+  judul     VARCHAR(255) NOT NULL COMMENT 'Nama Buku',
+  tahun      INT(4) ZEROFILL NOT NULL COMMENT 'Tahun terbit',
+  pengarang  VARCHAR(255) NOT NULL COMMENT 'Nama Pengarang maksimum 255 karakter',
+  penerbit   VARCHAR(255) NOT NULL COMMENT 'Nama Penerbit',
+  keterangan TEXT DEFAULT NULL COMMENT 'Keterangan atau sinopsis',
+  path_gambar VARCHAR(255) DEFAULT NULL COMMENT 'path ke gambar',
+  anggota_id_pinjam BIGINT(10) DEFAULT NULL COMMENT 'anggota id di pinjam, 0 atau null apabila free',
+  tanggal_pinjam TIMESTAMP DEFAULT now()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- TAMBAHKAN DISINI

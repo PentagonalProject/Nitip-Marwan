@@ -1,6 +1,101 @@
 <?php
 class RouterBuku
 {
+    public static function ApiCariBukuJudul($params)
+    {
+        if (!is_login()) {
+            if (!headers_sent()) {
+                header('Content-Type: application/json;charset=utf-8', 401);
+            }
+            echo json_encode([
+                "code" => 401,
+                "error" => "Tidak Punya Hak Akses",
+            ],JSON_PRETTY_PRINT);
+            exit(0);
+        }
+
+        if (!headers_sent()) {
+            header('Content-Type: application/json;charset=utf-8', 200);
+        }
+        $nama_buku = !isset($params['nama'])
+            ? ''
+            : $params['nama'];
+
+        $pencarian = cari_buku_by_judul($nama_buku);
+        $pencarian = is_array($pencarian) ? $pencarian : [];
+
+        echo json_encode([
+            "code" => 200,
+            "total" => count($pencarian),
+            "data" => $pencarian
+        ],JSON_PRETTY_PRINT);
+        exit(0);
+    }
+
+    public static function ApiCariJudulBukuByPengarang($params)
+    {
+        if (!is_login()) {
+            if (!headers_sent()) {
+                header('Content-Type: application/json;charset=utf-8', 401);
+            }
+            echo json_encode([
+                "code" => 401,
+                "error" => "Tidak Punya Hak Akses",
+            ],JSON_PRETTY_PRINT);
+            exit(0);
+        }
+
+        if (!headers_sent()) {
+            header('Content-Type: application/json;charset=utf-8', 200);
+        }
+        $nama_pengarang = !isset($params['nama'])
+            ? ''
+            : $params['nama'];
+
+        $pencarian = cari_buku_by_pengarang($nama_pengarang);
+        $pencarian = is_array($pencarian) ? $pencarian : [];
+
+        echo json_encode([
+            "code" => 200,
+            "total" => count($pencarian),
+            "data" => $pencarian
+        ],JSON_PRETTY_PRINT);
+        exit(0);
+    }
+
+    public static function ApiCariPengarang($params)
+    {
+        if (!is_login()) {
+            if (!headers_sent()) {
+                header('Content-Type: application/json;charset=utf-8', 401);
+            }
+            echo json_encode([
+                "code" => 401,
+                "error" => "Tidak Punya Hak Akses",
+            ],JSON_PRETTY_PRINT);
+            exit(0);
+        }
+
+        if (!headers_sent()) {
+            header('Content-Type: application/json;charset=utf-8', 200);
+        }
+        $nama_pengarang = !isset($params['nama'])
+            ? ''
+            : $params['nama'];
+
+        $pencarian = cari_pengarang_dari_buku($nama_pengarang);
+        $pencarian = is_array($pencarian) ? $pencarian : [];
+
+        echo json_encode([
+            "code" => 200,
+            "total" => count($pencarian),
+            "data" => $pencarian
+        ],JSON_PRETTY_PRINT);
+        exit(0);
+    }
+
+    // ------------------------------------------
+
     public static function Baru($params)
     {
         check_redirect_admin_router();
@@ -28,6 +123,20 @@ class RouterBuku
             : $params['id'];
 //        print_r($params);exit;
     }
+
+    public static function Detail($params)
+    {
+        check_redirect_login_router();
+        $id = empty($params['id'])
+            ? null
+            : $params['id'];
+        if (!is_numeric($id)) {
+            redirect(get_base_url_index('buku'));
+        }
+        muat_layout('buku-detail', $params);
+//        print_r($params);exit;
+    }
+
     public static function List($params)
     {
         check_redirect_login_router();

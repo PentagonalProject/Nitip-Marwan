@@ -35,8 +35,31 @@ $this->addGroup('/anggota', function (\FastRoute\RouteCollector $r) use ($standa
 // BUKU
 $this->addGroup('/buku', function (\FastRoute\RouteCollector $r) use ($standardMethod) {
     $r->addRoute($standardMethod, '[/]', 'RouterBuku::List');
+
     $r->addRoute($standardMethod, '/baru[/]', 'RouterBuku::Baru');
     $r->addRoute($standardMethod, '/pinjaman[/]', 'RouterBuku::Pinjaman');
     $r->addRoute($standardMethod, '/{action: (?i)ubah}[/[{id: \d+}[/]]]', 'RouterBuku::Ubah');
     $r->addRoute($standardMethod, '/{action: (?i)hapus}[/[{id: \d+}[/]]]', 'RouterBuku::Hapus');
+    $r->addRoute($standardMethod, '/{action: (?i)detail}[/[{id: [^/]+}[/]]]', 'RouterBuku::Detail');
+});
+
+// API
+$this->addGroup('/api', function (\FastRoute\RouteCollector $r) use ($standardMethod) {
+    $r->addRoute($standardMethod, '[/]', function () {
+        if (!headers_sent()) {
+            header('Content-Type: application/json', 404);
+        }
+        echo json_encode([
+            'code' => 404,
+            'error' => 'Target API Salah'
+        ],JSON_PRETTY_PRINT);
+        exit(0);
+    });
+    // anggota
+    $r->addRoute($standardMethod, '/anggota[/[{username: .*}[{slash: [/]+}]]]', 'RouterAnggota::ApiCari');
+    // buku
+    $r->addRoute($standardMethod, '/buku[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariBukuJudul');
+    $r->addRoute($standardMethod, '/buku-pengarang[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariJudulBukuByPengarang');
+    $r->addRoute($standardMethod, '/pengarang[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariPengarang');
+
 });

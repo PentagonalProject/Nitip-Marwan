@@ -131,3 +131,31 @@ function is_found()
 {
     return ! is_404() && defined('FOUND_200') && FOUND_200;
 }
+
+/**
+ * Tambahkan class atif untuk navigasi
+ *
+ * @param string $pos
+ * @param string $not
+ *
+ * @return string
+ */
+function add_class_active($pos, $not = null)
+{
+    if (!is_string($pos)) {
+        $pos = '';
+    }
+    if (!is_string($not)) {
+        $not = null;
+    }
+    $not = is_string($not) && trim($not) !== '' ? trim(strtolower(trim($not)), '/') : null;
+    $uri = ltrim(get_request_uri(), '/') . '/';
+    $pos = trim($pos, '/') .'/';
+    if (stripos($uri, $pos) === 0) {
+        if (!$not || stripos($uri, $pos. $not) !== 0) {
+            return 'active';
+        }
+    }
+
+    return '';
+}

@@ -7,23 +7,84 @@ muat_layout(
     ]
 );
 ?>
-        <?php
-        /**
-         * CONTOH
-         */
-        ?>
-        <h1>INI HALAMAN UTAMA</h1>
-        <p>Anda Masuk Sebagai: <?= get_current_user_name();?></p>
-        <div class="row">
-          <div class="col-md-12">
-            <pre><?php
-                foreach (get_current_user_detail() as $key => $value) {
-                    $key = ucwords(str_replace('_', ' ', $key));
-                    echo "{$key}: {$value}\n";
-                }
-              ?></pre>
+      <div class="row">
+        <div class="col-md-4 col-xs-4">
+          <div class="card no-body card-peter">
+            <div class="card-header fix-height-150 text-center">
+              <div class="panel-title">
+                <h4>Total Buku</h4>
+              </div>
+              <div class="icon-big-smaller text-center"><?= database_get_jumlah_buku();?></div>
+            </div>
           </div>
         </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="card no-body card-asphalt">
+            <div class="card-header fix-height-<?= is_admin() ? '200' : '150';?> text-center">
+              <div class="panel-title">
+                <h4>Total Anggota</h4>
+              </div>
+              <div class="icon-big-smaller text-center"><?= is_admin() ? database_get_jumlah_anggota() : database_get_jumlah_non_admin();?></div>
+              <?php if (is_admin()) { ?>
+                <p>Total anggota admin: <span class="label label-info"><?= database_get_jumlah_admin();?></span></p>
+                <p>Total anggota non admin: <span class="label label-info"><?= database_get_jumlah_non_admin();?></span></p>
+              <?php } ?>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4">
+          <div class="card no-body card-carrot">
+            <div class="card-header fix-height-150 text-center">
+              <div class="panel-title">
+                <h4><?= is_admin() ? 'Total Pinjaman' : 'Total Pinjaman Anda';?></h4>
+              </div>
+              <div class="icon-big-smaller text-center"><?= database_get_jumlah_pinjaman();?></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p>&nbsp;</p>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">Selamat Datang, <span class="label label-info"><?=htmlentities(get_current_first_name());?></span></h2>
+            </div>
+            <div class="panel-body">
+              <div class="alert alert-info">
+                <p>
+                  Berikut adalah detail anda.
+                  Untuk Melakukan perubahan silahkan menuju halaman <a href="<?=get_base_url_index('profile');?>" class="label label-primary">Kelola Akun</a>
+                </p>
+              </div>
+              <table class="table table-responsive table-striped">
+                <thead>
+                  <tr>
+                    <th width="150">Nama</th>
+                    <th>Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php
+                  foreach (get_current_user_detail() as $key => $value) {
+                      if ($key === 'password' || $key == 'is_admin') {
+                        continue;
+                      }
+                      if ($key === 'id') {
+                        $key = 'User_ID';
+                      }
+                      $value = htmlentities($value);
+                      $value = $value?:'-';
+                      $key = ucwords(str_replace('_', ' ', $key));
+                      echo "<tr><td>{$key}</td><td>{$value}</td></tr>\n";
+                  }
+                ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 <?php
 // muat footer
 muat_layout('footer');

@@ -2,37 +2,69 @@
 /**
  * Berkas Header
  */
+$title = isset($variable)
+&& is_array($variable)
+&& isset($variable['title'])
+&& is_string($variable['title'])
+    ? htmlentities($variable['title'])
+    : 'Dasbor';
+
+/**
+ * Nama awal
+ * @var string
+ */
+$first_name = (string) get_current_first_name();
+$first_name = trim($first_name);
+$first_name = explode(' ', $first_name);
+$first_name = ucfirst(strtolower((string)array_shift($first_name)));
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="no-js">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title><?=
-        isset($variable)
-        && is_array($variable)
-        && isset($variable['title'])
-        && is_string($variable['title'])
-        ? htmlentities($variable['title'])
-        : 'Dasbor';
-  ?></title>
+  <title><?= $title;?></title>
+  <script type="text/javascript">
+      // replace no-js with js
+      document.documentElement.className = document.documentElement.className.replace("no-js","js");
+  </script>
+  <link rel="icon" href="<?= get_base_url('assets/images/favicon.ico');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/css/bootstrap.min.css');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/css/app.css');?>">
 </head>
-<body>
+<body class="<?= is_login() ? 'login' : 'tamu';?>">
   <div id="page" class="wrapper">
     <div class="container-fluid">
 <?php
-    if (is_login() && is_found()) {
+    if (is_login()) {
 ?>
       <div class="navigation" id="navigation">
 
       </div>
       <div id="sidebar">
         <div class="navigation">
+            <div class="my-profile text-center">
+              <div class="icon-big text-center">
+                <i class="glyphicon glyphicon-user"></i>
+              </div>
+              <div class="profile-name">
+                Hi, <strong><?= htmlentities(substr($first_name, 0, 20));?></strong>
+              </div>
+              <div class="text-button">
+                <div class="row">
+                  <div class="col-md-6">
+                    <a class="profile-link" href="<?= get_base_url_index('profile');?>"><i class="glyphicon glyphicon-wrench"></i>&nbsp;Akun</a>
+                  </div>
+                  <div class="col-md-6">
+                    <a class="profile-logout" href="<?= url_keluar();?>"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Keluar</a>
+                  </div>
+                </div>
+              </div>
+            </div>
             <ul>
               <li><a href="<?= get_base_url_index();?>">Dasbor</a></li>
+              <li><a href="<?= get_base_url_index('profile');?>">Kelola Akun</a></li>
               <li><a href="<?= get_base_url_index('buku/pinjaman');?>"><?= is_admin() ? 'Daftar Pinjaman' : 'Pinjamanku';?></a></li>
               <?php
               // apabila non admin
@@ -44,24 +76,30 @@
               if (is_admin()) { ?>
                   <li>
                     <a href="<?= get_base_url_index('buku');?>">Buku</a>
-                    <ul>
+                    <ul class="sub-nav <?=add_class_active('buku', 'pinjaman');?>">
                       <li><a href="<?= get_base_url_index('buku');?>">Semua Buku</a></li>
                       <li><a href="<?= get_base_url_index('buku/baru');?>">Tambah Buku</a></li>
                     </ul>
                   </li>
                   <li>
                     <a href="<?= get_base_url_index('anggota');?>" class="dropdown-sidebar">Anggota</a>
-                    <ul>
+                    <ul class="sub-nav <?=add_class_active('anggota');?>">
                       <li><a href="<?= get_base_url_index('anggota');?>">Semua Anggota</a></li>
                       <li><a href="<?= get_base_url_index('anggota/baru');?>">Tambah Anggota</a></li>
                     </ul>
                   </li>
               <?php } ?>
-              <li><a href="<?= get_base_url_index('profile');?>">Kelola Akun</a></li>
-              <li><a href="<?= url_keluar();?>">Keluar</a></li>
             </ul>
         </div>
       </div>
 <?php } ?>
-      <div id="content" class="container">
-
+      <div id="content" class="container-fluid">
+    <?php if (is_login()) { ?>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="title-map">
+              <h1 class="panel-title"><?= $title;?></h1>
+            </div>
+          </div>
+        </div>
+    <?php } ?>

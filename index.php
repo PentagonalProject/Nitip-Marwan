@@ -26,6 +26,7 @@ require_once __DIR__ . '/app/functions/database.php';
 
 // database functions
 require_once __DIR__ . '/app/functions/database/anggota.php';
+require_once __DIR__ . '/app/functions/database/buku.php';
 
 // -----------------------------------------------------
 // Dispatch Router

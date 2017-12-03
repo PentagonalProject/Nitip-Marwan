@@ -1,0 +1,14 @@
+# ----------------------------------------------------------------
+# ROUTES HANDLER
+# ----------------------------------------------------------------
+
+# Handle Index base URI '/' With <index.php>
+# -------------------------------
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # use index.php as base URL
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

@@ -46,6 +46,19 @@ function get_current_user_name()
 }
 
 /**
+ * @return bool|string
+ */
+function get_current_first_name()
+{
+    $user_detail = get_current_user_detail();
+    if (empty($user_detail['nama_awal'])) {
+        return false;
+    }
+
+    return $user_detail['nama_awal'];
+}
+
+/**
  * @return array|bool
  */
 function get_current_user_detail()

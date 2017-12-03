@@ -51,11 +51,12 @@ class RouterBase
                 redirect(get_base_url());
                 return;
             }
+
             redirect(url_login() . '?error=true');
             return;
         }
 
-        if ($error) {
+        if ($error && is_string($error) && in_array(strtolower($error), ['logout', 'true', 'error'])) {
             $variable['message'] = $error == 'logout' ? self::MESSAGE_KELUAR : self::MESSAGE_GAGAL;
         }
 
