@@ -1,4 +1,8 @@
 <?php
+$user_id = !empty($variable['user_id'])
+    ? $variable['user_id']
+    : null;
+$current_user = $user_id ? database_get_anggota_by_id($user_id) : [];
 // muat header
 muat_layout(
     'header',
@@ -7,5 +11,52 @@ muat_layout(
     ]
 );
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <p>&nbsp;</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Hapus Anggota</h1>
+                </div>
+                <div class="panel-body">
+                    <?php if (count($current_user) === 0) { ?>
+                        <div class="alert-warning alert">
+                            <p>Data Anggota Tidak Tersedia atau Anggota ID Valid</p>
+                        </div>
+                    <?php } else { ?>
+                        <div class="text-center">
+                            <p>&nbsp;</p>
+                            <?php if (!$current_user['is_admin']) { ?>
+                                <div class="alert alert-danger" style="display: inline-block">
+                                    <strong>Ini adalah akun admin</strong>
+                                </div>
+                            <?php } ?>
+                            <p><strong>Apakah anda yakin ingin menghapus</strong></p>
+                            <p><span class="btn btn-info"><?= $current_user['user_name'];?></span></p>
+                            <p>&nbsp;</p>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="panel-footer">
+                    <form method="post" action="<?= get_base_url_index('anggota/hapus/'.$user_id);?>" onsubmit="return confirm('Apakah anda yakin ingin menghapus akun ini?');">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4">
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </div>
+                            <div class="col-md-offset-4 col-md-4 col-sm-4">
+                                <?php
+                                    $referer = isset($_SERVER['HTTP_REFERER']) && is_string($_SERVER['HTTP_REFERER'])
+                                        && strpos($_SERVER['HTTP_REFERER'], get_host()) !== false
+                                        ? $_SERVER['HTTP_REFERER']
+                                        : get_base_url_index('anggota');
+                                ?>
+                                <a href="<?= $referer?>" class="btn btn-primary pull-right">Batalkan</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php
 muat_layout('footer');

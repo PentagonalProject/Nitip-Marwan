@@ -21,7 +21,14 @@ class RouterBuku
             ? ''
             : $params['nama'];
 
-        $pencarian = cari_buku_by_judul($nama_buku);
+        $limit = get('limit', 100);
+        $offset = get('offset', 0);
+        $limit = is_numeric($limit) ? intval(abs($limit)) : 100;
+        $limit = $limit > 0 ? $limit : 100;
+        $offset = is_numeric($offset) ? intval(abs($offset)) : 0;
+        $offset = $limit > 0 ? $offset : 0;
+
+        $pencarian = cari_buku_by_judul($nama_buku, $offset, $limit);
         $pencarian = is_array($pencarian) ? $pencarian : [];
         $value = [
             "code" => 200,
@@ -55,7 +62,14 @@ class RouterBuku
             ? ''
             : $params['nama'];
 
-        $pencarian = cari_buku_by_pengarang($nama_pengarang);
+        $limit = get('limit', 100);
+        $offset = get('offset', 0);
+        $limit = is_numeric($limit) ? intval(abs($limit)) : 100;
+        $limit = $limit > 0 ? $limit : 100;
+        $offset = is_numeric($offset) ? intval(abs($offset)) : 0;
+        $offset = $limit > 0 ? $offset : 0;
+
+        $pencarian = cari_buku_by_pengarang($nama_pengarang, $offset, $limit);
         $pencarian = is_array($pencarian) ? $pencarian : [];
         $value = [
             "code" => 200,
@@ -89,7 +103,14 @@ class RouterBuku
             ? ''
             : $params['nama'];
 
-        $pencarian = cari_pengarang_dari_buku($nama_pengarang);
+        $limit = get('limit', 100);
+        $offset = get('offset', 0);
+        $limit = is_numeric($limit) ? intval(abs($limit)) : 100;
+        $limit = $limit > 0 ? $limit : 100;
+        $offset = is_numeric($offset) ? intval(abs($offset)) : 0;
+        $offset = $limit > 0 ? $offset : 0;
+
+        $pencarian = cari_pengarang_dari_buku($nama_pengarang, $offset, $limit);
         $pencarian = is_array($pencarian) ? $pencarian : [];
 
         $value = [

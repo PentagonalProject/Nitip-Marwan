@@ -18,10 +18,7 @@ function validasi_anggota_username($username)
     if ($username === '') {
         return false;
     }
-
-    // replace unwanted characters
-    $username = preg_replace('/[^a-z0-9\-\_]/i', '', $username);
-    if ($username && !preg_match('/[a-z]/i', $username)) {
+    if (!$username || ! preg_match('/^[a-z0-9][a-z0-9\-\_]+$/i', $username)) {
         return false;
     }
 
@@ -77,7 +74,7 @@ function database_update_anggota($username, array $data)
     $fields = [
         'user_name',
         'password',
-        'nama_awal',
+        'nama_depan',
         'nama_belakang',
         'email',
         'is_admin'
@@ -133,7 +130,7 @@ function database_update_anggota_by_id($id, array $data)
     $fields = [
         'user_name',
         'password',
-        'nama_awal',
+        'nama_depan',
         'nama_belakang',
         'email',
         'is_admin'
@@ -236,7 +233,7 @@ function database_create_anggota(array $data)
     $fields = [
         'user_name',
         'password',
-        'nama_awal',
+        'nama_depan',
         'nama_belakang',
         'email',
         'is_admin'

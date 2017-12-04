@@ -57,16 +57,17 @@ function create_query_loop_buku($offset = 0, $limit = 100)
  * @param int $limit
  * @return array|bool
  */
-function cari_buku_by_judul($nama, $limit = 100)
+function cari_buku_by_judul($nama, $offset = 0,$limit = 100)
 {
     if (!is_string($nama)) {
         return false;
     }
 
     $limit = !is_numeric($limit) || is_int(abs($limit)) ? 100 : abs($limit);
+    $offset = !is_numeric($limit) || is_int(abs($limit)) ? 0 : abs($limit);
     $nama = trim(strtolower($nama));
     if ($nama == '') {
-        $loop =create_query_loop_buku(0, $limit);
+        $loop =create_query_loop_buku($offset, $limit);
     } else {
         $loop = database_execute(
             "SELECT * FROM buku
@@ -74,7 +75,7 @@ function cari_buku_by_judul($nama, $limit = 100)
             ORDER BY LOCATE(?, judul)
             DESC
             LIMIT {$limit}
-            OFFSET 0
+            OFFSET {$offset}
         ",
             [
                 "%{$nama}%",

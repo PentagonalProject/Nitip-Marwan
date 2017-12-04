@@ -9,7 +9,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `anggota` (
   id BIGINT(10) NOT NULL,
   user_name   VARCHAR(100) NOT NULL COMMENT 'User name unik',
-  nama_awal  VARCHAR(255) NOT NULL DEFAULT 'anonim' COMMENT 'Nama awalan default anonim',
+  nama_depan  VARCHAR(255) NOT NULL DEFAULT 'anonim' COMMENT 'Nama awalan default anonim',
   nama_belakang VARCHAR(255) DEFAULT NULL COMMENT 'Nama akhiran anggota',
   email      VARCHAR(255) NOT NULL COMMENT 'Email anggota',
   is_admin   BOOL NOT NULL DEFAULT FALSE COMMENT 'Boolean apabila admin set ke true',
@@ -38,9 +38,9 @@ DELETE FROM anggota WHERE user_name='contoh';
 --
 -- tambahkan user - username = admin, password = password
 --
-INSERT INTO anggota(user_name, nama_awal, email, password, is_admin)
+INSERT INTO anggota(user_name, nama_depan, email, password, is_admin)
     VALUES ('admin', 'Administrator', 'admin@example.com', sha1('password'), TRUE);
-INSERT INTO anggota(user_name, nama_awal, email, password, is_admin)
+INSERT INTO anggota(user_name, nama_depan, email, password, is_admin)
     VALUES ('contoh', 'User', 'user@example.com', sha1('password'), FALSE);
 
 

@@ -34,6 +34,23 @@ function get_session($name, $default = null)
 }
 
 /**
+ * Hapus session sesuai dengan nama
+ *
+ * @param string $name
+ *
+ * @return array|mixed|null
+ */
+function delete_session($name)
+{
+    $session = get_all_sessions();
+    if (array_key_exists($name, $session)) {
+        unset($_SESSION[$name]);
+        return true;
+    }
+    return false;
+}
+
+/**
  * @return bool|string
  */
 function get_current_user_name()
@@ -46,16 +63,35 @@ function get_current_user_name()
 }
 
 /**
+ * @return bool|int
+ */
+function get_current_user_id()
+{
+    static $id;
+    if (isset($id)) {
+        return $id;
+    }
+
+    $id = false;
+    $detail = get_current_user_detail();
+    if ($detail && isset($detail['id'])) {
+        $id = abs($detail['id']);
+    }
+
+    return $id;
+}
+
+/**
  * @return bool|string
  */
 function get_current_first_name()
 {
     $user_detail = get_current_user_detail();
-    if (empty($user_detail['nama_awal'])) {
+    if (empty($user_detail['nama_depan'])) {
         return false;
     }
 
-    return $user_detail['nama_awal'];
+    return $user_detail['nama_depan'];
 }
 
 /**

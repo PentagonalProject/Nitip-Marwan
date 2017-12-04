@@ -29,8 +29,8 @@ $this->addRoute($standardMethod, '/profile[/]', 'RouterAnggota::Profile');
 $this->addGroup('/anggota', function (\FastRoute\RouteCollector $r) use ($standardMethod) {
     $r->addRoute($standardMethod, '[/]', 'RouterAnggota::List');
     $r->addRoute($standardMethod, '/baru[/]', 'RouterAnggota::Baru');
-    $r->addRoute($standardMethod, '/{action: (?i)ubah}[/[{username: (?i)(?:[^\/\s]+)}[/]]]', 'RouterAnggota::Ubah');
-    $r->addRoute($standardMethod, '/{action: (?i)hapus}[/[{username: (?i)(?:[^\/\s]+)}[/]]]', 'RouterAnggota::Hapus');
+    $r->addRoute($standardMethod, '/{action: (?i)ubah}[/[{id: (?i)(?:[0-9]+)}[/]]]', 'RouterAnggota::Ubah');
+    $r->addRoute($standardMethod, '/{action: (?i)hapus}[/[{id: (?i)(?:[0-9]+)}[/]]]', 'RouterAnggota::Hapus');
 });
 // BUKU
 $this->addGroup('/buku', function (\FastRoute\RouteCollector $r) use ($standardMethod) {

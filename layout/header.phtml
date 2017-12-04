@@ -10,7 +10,7 @@ $title = isset($variable)
     : 'Dasbor';
 
 /**
- * Nama awal
+ * Nama depan
  * @var string
  */
 $first_name = (string) get_current_first_name();
@@ -101,7 +101,8 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
         </div>
       </div>
 <?php } ?>
-      <div id="content" class="container-fluid">
+    <div id="content">
+      <div class="container-fluid">
     <?php if (is_login()) { ?>
         <div class="row">
           <div class="col-md-12">

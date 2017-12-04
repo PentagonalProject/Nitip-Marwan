@@ -6,6 +6,129 @@ muat_layout(
         'title' => 'Tambah Anggota Baru'
     ]
 );
+$current_user = [
+    'user_name' => '',
+    'nama_depan' => '',
+    'nama_belakang' => '',
+    'email' => '',
+    'is_admin' => false,
+];
+$current_user_session = get_session('anggota_baru');
+// hapus sesi
+delete_session('anggota_baru');
+$current_user_session = is_array($current_user_session) ? $current_user_session : [];
+$current_user = array_merge($current_user, $current_user_session);
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <br/>
+            <form method="post" action="<?= get_base_url_index('anggota/baru/');?>">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">Tambahkan Anggota</h1>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        if (!empty($variable['message'])
+                            && is_string($variable['message'])) {
+                            echo $variable['message'];
+                        }
+                        ?>
+                        <table class="table table-responsive">
+                            <?php
+                            $list = [
+                                'user_name' => [
+                                    'label' => 'User Name',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'minlength'=> 3,
+                                        'pattern' => '[A-Za-z0-9][A-Za-z0-9_-]+',
+                                        'maxlength'=> 100,
+                                        'value' => $current_user['user_name'],
+                                        'required' => 'required'
+                                    ],
+                                ],
+                                'nama_depan' => [
+                                    'label' => 'Nama Depan',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'minlength'=> 3,
+                                        'maxlength'=> 255,
+                                        'value' => $current_user['nama_depan'],
+                                        'required' => 'required'
+                                    ],
+                                ],
+                                'nama_belakang' => [
+                                    'label' => 'Nama Belakang',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'minlength'=> 0,
+                                        'maxlength'=> 255,
+                                        'value' => $current_user['nama_belakang'],
+                                    ],
+                                ],
+                                'email' => [
+                                    'label' => 'Alamat Email',
+                                    'input' => [
+                                        'type' => 'email',
+                                        'maxlength'=> 255,
+                                        'value' => $current_user['email'],
+                                        'required' => 'required'
+                                    ],
+                                ],
+                                'password' => [
+                                    'label' => 'Password',
+                                    'input' => [
+                                        'type' => 'password',
+                                        'value' => '',
+                                        'required' => 'required'
+                                    ],
+                                ],
+                            ];
+
+                            foreach ($list as $name => $value) {
+                                if (!isset($value['input'])) {
+                                    ?>
+                                    <tr>
+                                        <td width="180"><label for="user-<?= $name;?>"><?=$value['label'];?></label></td>
+                                        <td><?= $value['value'];?></td>
+                                    </tr>
+
+                                    <?php
+                                    continue;
+                                }
+                                $attr = "";
+                                foreach ($value['input'] as $k => $n) {
+                                    $n = htmlspecialchars($n, ENT_QUOTES);
+                                    $attr .= "{$k}=\"{$n}\" ";
+                                }
+                                ?>
+                                <tr>
+                                    <td width="180"><label for="user-<?= $name;?>"><?=$value['label'];?></label></td>
+                                    <td><input class="form-control" <?= $attr;?>name="user[<?= $name;?>]" id="user-<?= $name;?>" placeholder="Masukkan <?= $value['label'];?>"></td>
+                                </tr>
+
+                            <?php } ?>
+                            <tr>
+                                <td width="180"><label for="user-password">Status Admin</label></td>
+                                <td>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="yes" class="checkbox" type="checkbox" name="user[is_admin]" id="user-is_admin"<?= $current_user['is_admin']? ' checked':'';?>>
+                                            <em><small>Centang apabila ingin menjadikan admin</small></em>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 <?php
 muat_layout('footer');

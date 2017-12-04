@@ -3,6 +3,7 @@
  */
 body {
     min-width: 320px;
+
 }
 
 /* CARD
@@ -203,6 +204,10 @@ body.tamu {
  -------------------------- */
 .login #content {
     margin-left: 200px;
+    overflow-x: auto;
+    min-width:480px;
+    position:relative;
+    z-index: 100;
 }
 
 #form-login {
@@ -227,6 +232,7 @@ body.tamu {
     left: 0;
     bottom: 0;
     width: 200px;
+    z-index:1000;
 }
 
 #sidebar .navigation {
