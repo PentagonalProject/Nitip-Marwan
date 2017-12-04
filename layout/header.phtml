@@ -73,18 +73,25 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
             <ul>
               <li><a href="<?= get_base_url_index();?>">Dasbor</a></li>
               <li><a href="<?= get_base_url_index('profile');?>">Kelola Akun</a></li>
-              <li><a href="<?= get_base_url_index('buku/pinjaman');?>"><?= is_admin() ? 'Daftar Pinjaman' : 'Pinjamanku';?></a></li>
               <?php
               // apabila non admin
               if (!is_admin()) {?>
+                <li><a href="<?= get_base_url_index('pinjamanku/ku');?>">Pinjamanku</a></li>
                 <li><a href="<?= get_base_url_index('buku');?>">Daftar Buku</a></li>
               <?php } ?>
               <?php
               // apabila admin
               if (is_admin()) { ?>
                   <li>
+                    <a href="<?= get_base_url_index('pinjaman');?>">Daftar Pinjaman</a>
+                    <ul class="sub-nav <?=add_class_active('pinjaman');?>">
+                      <li><a href="<?= get_base_url_index('pinjaman');?>">Semua Pinjaman</a></li>
+                      <li><a href="<?= get_base_url_index('pinjaman/ku');?>">Pinjamanku</a></li>
+                    </ul>
+                  </li>
+                  <li>
                     <a href="<?= get_base_url_index('buku');?>">Buku</a>
-                    <ul class="sub-nav <?=add_class_active('buku', 'pinjaman');?>">
+                    <ul class="sub-nav <?=add_class_active('buku');?>">
                       <li><a href="<?= get_base_url_index('buku');?>">Semua Buku</a></li>
                       <li><a href="<?= get_base_url_index('buku/baru');?>">Tambah Buku</a></li>
                     </ul>

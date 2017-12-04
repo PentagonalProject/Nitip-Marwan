@@ -42,14 +42,16 @@ function database_get_jumlah_pinjaman()
 /**
  * @param int $offset
  * @param int $limit
+ * @param bool $isDesc
  *
  * @return ADORecordSet_pdo
  */
-function create_query_loop_buku($offset = 0, $limit = 100)
+function create_query_loop_buku($offset = 0, $limit = 100, $isDesc = true)
 {
     $offset = abs($offset);
     $limit  = abs($limit);
-    return database_execute("SELECT * FROM buku WHERE true ORDER BY id LIMIT {$limit} OFFSET {$offset}");
+    $isDesc = $isDesc ? " DESC " : "ASC";
+    return database_execute("SELECT * FROM buku WHERE true ORDER BY id {$isDesc} LIMIT {$limit} OFFSET {$offset}");
 }
 
 /**
@@ -176,4 +178,69 @@ function cari_pengarang_dari_buku($nama_pengarang = '', $offset = 0, $limit = 10
         }
     }
     return $return;
+}
+
+/**
+ * @param array $data
+ *
+ * @return ADORecordSet_pdo|string string nama kolom apabila gagal
+ */
+function database_create_buku(array $data)
+{
+    $fields = [
+        'judul',
+        'pengarang',
+        'penerbit',
+        'tahun',
+        'keterangan',
+        'path_gambar',
+    ];
+
+    $values = [];
+    foreach ($data as $key => $value) {
+        if (!in_array($key, $fields)) {
+            continue;
+        }
+        if ($key === 'tahun') {
+            $value = (int) $value;
+        }
+        $values[$key] = $value;
+    }
+
+    if (!isset($values['judul'])) {
+        return 'judul';
+    }
+    if (!isset($values['pengarang'])) {
+        return 'pengarang';
+    }
+    if (!isset($values['penerbit'])) {
+        return 'penerbit';
+    }
+    if (!isset($values['tahun'])) {
+        return 'tahun';
+    }
+
+    $columns     = implode(', ', array_keys($values));
+    $valueValue  = rtrim(str_repeat('?, ', count($values)), ', ');
+    return database_execute(
+        "INSERT INTO buku ({$columns}) VALUES ({$valueValue})", array_values($values)
+    );
+}
+
+/**
+ * @param int $id
+ *
+ * @return bool|array
+ */
+function database_get_buku_by_id($id)
+{
+    if (!is_numeric($id)) {
+        return false;
+    }
+    $record = database_execute("SELECT * FROM buku WHERE id=?", [abs($id)]);
+    if ($record->fields) {
+        return $record->fields;
+    }
+
+    return false;
 }

@@ -16,6 +16,9 @@ $autoload->add('', __DIR__ . '/app/routers/');
 // register class
 $autoload->register();
 
+// include Image Resizer
+require_once __DIR__ .'/app/ImageResizer.php';
+
 // -----------------------------------------------------
 // include functions
 // -----------------------------------------------------
@@ -23,6 +26,7 @@ require_once __DIR__ . '/app/functions/helper.php';
 require_once __DIR__ . '/app/functions/url.php';
 require_once __DIR__ . '/app/functions/auth.php';
 require_once __DIR__ . '/app/functions/database.php';
+require_once __DIR__ . '/app/functions/upload.php';
 
 // database functions
 require_once __DIR__ . '/app/functions/database/anggota.php';

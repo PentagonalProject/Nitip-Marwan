@@ -37,10 +37,14 @@ $this->addGroup('/buku', function (\FastRoute\RouteCollector $r) use ($standardM
     $r->addRoute($standardMethod, '[/]', 'RouterBuku::List');
 
     $r->addRoute($standardMethod, '/baru[/]', 'RouterBuku::Baru');
-    $r->addRoute($standardMethod, '/pinjaman[/]', 'RouterBuku::Pinjaman');
     $r->addRoute($standardMethod, '/{action: (?i)ubah}[/[{id: \d+}[/]]]', 'RouterBuku::Ubah');
     $r->addRoute($standardMethod, '/{action: (?i)hapus}[/[{id: \d+}[/]]]', 'RouterBuku::Hapus');
-    $r->addRoute($standardMethod, '/{action: (?i)detail}[/[{id: [^/]+}[/]]]', 'RouterBuku::Detail');
+    $r->addRoute($standardMethod, '/{id: [^/]+}[/]', 'RouterBuku::Detail');
+});
+
+$this->addGroup('/pinjaman', function (\FastRoute\RouteCollector $r) use ($standardMethod) {
+    $r->addRoute($standardMethod, '[/]', 'RouterPinjaman::Pinjaman');
+    $r->addRoute($standardMethod, '/ku[/]', 'RouterPinjaman::Pinjamanku');
 });
 
 // API

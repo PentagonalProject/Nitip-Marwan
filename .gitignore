@@ -93,3 +93,6 @@ _ignore
 # Always Include .gitkeep & .htaccess files
 !.gitkeep
 !.htaccess
+
+# Ignore Gambar
+/gambar/*.*

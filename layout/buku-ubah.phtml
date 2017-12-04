@@ -6,6 +6,112 @@ muat_layout(
         'title' => 'Ubah Data Buku'
     ]
 );
+$id           = isset($variable) && isset($variable['id'])
+    ? $variable['id']
+    : null;
+$current_buku = database_get_buku_by_id($id);
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <br/>
+            <form method="post" action="<?= get_base_url_index('buku/ubah/'.$id);?>">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">Ubah Data Buku <span class="label label-info"><?= $current_buku['judul'];?></span></h1>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        if (!empty($variable['message'])
+                            && is_string($variable['message'])) {
+                            echo $variable['message'];
+                        }
+                        ?>
+                        <p>
+                            <small><em><strong><a href="<?= get_base_url_index('buku/hapus/' . $current_buku['id']);?>" style="color: #ff3535">Hapus Buku Ini</a></strong></em></small>
+                        </p>
+                        <table class="table table-responsive">
+                            <?php
+                            $list = [
+                                'judul'     => [
+                                    'label' => 'Judul Buku',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'maxlength' => '255',
+                                        'value' => $current_buku['judul']
+                                    ]
+                                ],
+                                'pengarang' => [
+                                    'label' => 'Pengarang Buku',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'maxlength' => '255',
+                                        'data-autocomplete' => 'pengarang',
+                                        'value' => $current_buku['pengarang']
+                                    ]
+                                ],
+                                'penerbit' => [
+                                    'label' => 'Penerbit Buku',
+                                    'input' => [
+                                        'type' => 'text',
+                                        'maxlength' => '255',
+                                        'data-autocomplete' => 'penerbit',
+                                        'value' => $current_buku['penerbit']
+                                    ]
+                                ],
+                                'tahun'  => [
+                                    'label' => 'Tahun Buku',
+                                    'input' => [
+                                        'type'     => 'number',
+                                        'pattern'  => '[0-9]',
+                                        'minlength' => 4,
+                                        'maxlength' => 4,
+                                        'min' => 1800,
+                                        'max' => abs(date('Y')) + 20,
+                                        'value' => $current_buku['tahun']
+                                    ]
+                                ],
+                                /*
+                                'tanggal_pinjam' => [
+                                    'label' => 'Tanggal Peminjaman',
+                                    'input' => [
+                                        'type' => 'date',
+                                        'value' => date('Y-m-d')
+                                    ]
+                                ],*/
+                            ];
+
+                            foreach ($list as $name => $value) {
+                                if (!isset($value['input'])) {
+                                    ?>
+                                    <tr>
+                                        <td width="180"><label for="buku-<?= $name;?>"><?=$value['label'];?></label></td>
+                                        <td><?= $value['value'];?></td>
+                                    </tr>
+
+                                    <?php
+                                    continue;
+                                }
+                                $attr = "";
+                                foreach ($value['input'] as $k => $n) {
+                                    $n = htmlspecialchars($n, ENT_QUOTES);
+                                    $attr .= "{$k}=\"{$n}\" ";
+                                }
+                                ?>
+                                <tr>
+                                    <td width="180"><label for="buku-<?= $name;?>"><?=$value['label'];?></label></td>
+                                    <td><input class="form-control" <?= $attr;?>name="buku[<?= $name;?>]" id="buku-<?= $name;?>" placeholder="Masukkan <?= $value['label'];?>"></td>
+                                </tr>
+
+                            <?php } ?>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 <?php
 muat_layout('footer');

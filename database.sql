@@ -57,6 +57,19 @@ CREATE TABLE `buku` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- ALTERING for table `buku`
+--
+ALTER TABLE `buku`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for table `buku`
+--
+ALTER TABLE `buku`
+  MODIFY `id` BIGINT(11) NOT NULL AUTO_INCREMENT;
+
+
+--
 -- TAMBAHKAN DISINI
 --
 

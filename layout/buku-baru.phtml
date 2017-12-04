@@ -6,15 +6,33 @@ muat_layout(
         'title' => 'Tambah Buku Baru'
     ]
 );
+
+$current_buku = [
+    'judul' => '',
+    'tahun' => date('Y'),
+    'pengarang' => '',
+    'penerbit' => '',
+];
+$current_buku_session = get_session('buku_baru');
+// hapus sesi
+delete_session('buku_baru');
+$current_buku_session = is_array($current_buku_session) ? $current_buku_session : [];
+$current_buku         = array_merge($current_buku, $current_buku_session);
 ?>
       <div class="row">
         <div class="col-md-12">
-          <form method="post" action="<?= get_base_url_index('buku/baru');?>">
+          <form method="post" action="<?= get_base_url_index('buku/baru');?>" enctype="multipart/form-data">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h1 class="panel-title">Tambahkan Buku</h1>
                 </div>
                 <div class="panel-body">
+                    <?php
+                    if (!empty($variable['message'])
+                        && is_string($variable['message'])) {
+                        echo $variable['message'];
+                    }
+                    ?>
                     <table class="table table-responsive">
                         <tbody>
                         <?php
@@ -24,7 +42,7 @@ muat_layout(
                                     'input' => [
                                         'type' => 'text',
                                         'maxlength' => '255',
-                                        'value' => ''
+                                        'value' => $current_buku['judul']
                                     ]
                                 ],
                                 'pengarang' => [
@@ -33,7 +51,7 @@ muat_layout(
                                         'type' => 'text',
                                         'maxlength' => '255',
                                         'data-autocomplete' => 'pengarang',
-                                        'value' => ''
+                                        'value' => $current_buku['pengarang']
                                     ]
                                 ],
                                 'penerbit' => [
@@ -42,7 +60,7 @@ muat_layout(
                                         'type' => 'text',
                                         'maxlength' => '255',
                                         'data-autocomplete' => 'penerbit',
-                                        'value' => ''
+                                        'value' => $current_buku['penerbit']
                                     ]
                                 ],
                                 'tahun'  => [
@@ -54,7 +72,7 @@ muat_layout(
                                         'maxlength' => 4,
                                         'min' => 1800,
                                         'max' => abs(date('Y')) + 20,
-                                        'value' => date('Y')
+                                        'value' => $current_buku['tahun']
                                     ]
                                 ],
                                 /*

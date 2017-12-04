@@ -151,11 +151,34 @@ function add_class_active($pos, $not = null)
     $not = is_string($not) && trim($not) !== '' ? trim(strtolower(trim($not)), '/') : null;
     $uri = ltrim(get_request_uri(), '/') . '/';
     $pos = trim($pos, '/') .'/';
+    $pos2 = trim($pos, '/') .'?';
     if (stripos($uri, $pos) === 0) {
         if (!$not || stripos($uri, $pos. $not) !== 0) {
             return 'active';
         }
     }
+    if (stripos($uri, $pos2) === 0) {
+        if (!$not || stripos($uri, $pos2. $not) !== 0) {
+            return 'active';
+        }
+    }
 
     return '';
+}
+
+/**
+ * @return string
+ */
+function get_path_upload_gambar()
+{
+    static $path;
+    if (!isset($path)) {
+        $path = __DIR__ .'/../../gambar';
+        if (!is_dir($path)) {
+            @mkdir($path, 0777, true);
+        }
+        $path = realpath($path)?: $path;
+    }
+
+    return $path;
 }

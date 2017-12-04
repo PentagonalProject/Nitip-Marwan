@@ -159,7 +159,12 @@ class RouterAnggota
         if (abs($user_id) === get_current_user_id()) {
             redirect(get_base_url_index('profile'));
         }
+
         $params['user_id'] = $user_id;
+        if (!database_get_anggota_by_id($user_id)) {
+            redirect(get_base_url_index('anggota'));
+        }
+
         if (get_method() === 'POST') {
             $data = post('user');
             if (!is_array($data)) {

@@ -6,6 +6,149 @@ muat_layout(
         'title' => 'Daftar Buku'
     ]
 );
+
+$page       = get('page', 0);
+$total_buku = database_get_jumlah_buku();
+// list user perhalaman
+$per_halaman = 9;
+$jumlah_halaman = abs($total_buku / $per_halaman);
+$jumlah_halaman = intval($jumlah_halaman) + (!is_int($jumlah_halaman) ? 1 :0);
+$current_page = is_numeric($page) ? intval($page) : 0;
+$current_page = $current_page < 1 ? 1 : $current_page;
+$current_page = $current_page > $jumlah_halaman ? $jumlah_halaman : $current_page;
+$offset = ($current_page-1) * $per_halaman;
+
+// buat loop anggota
+$loopBuku = create_query_loop_buku($offset, $per_halaman);
+$loopBuku = ! $loopBuku ? [] : $loopBuku;
+$buku     = [];
+foreach ($loopBuku as $key => $value) {
+    $buku[$key] = $value;
+}
+unset($value, $loopBuku);
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <p>&nbsp;</p>
+            <?php if (get('status') === 'deleted') { ?>
+                <div class="alert alert-success alert-dismissable">
+                    Buku Berhasil Dihapus<div class="close" data-dismiss="alert" aria-label="close">&times;</div>
+                </div>
+            <?php } ?>
+            <div class="alert alert-info">
+                <p>Menampilkan <span class="label label-info"><?= count($buku);?></span>  dari <span class="label label-success"><?= $total_buku;?></span> buku.</p>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Daftar Buku</h1>
+                </div>
+                <div class="panel-body">
+                    <?php
+                        $hasSet = true;
+                        $buku = array_chunk($buku, 3);
+                        foreach ($buku as $key => $bukuArray) {
+                            echo "<div class=\"row\">\n";
+                            foreach ($bukuArray as $detailBuku) {
+                                if (($img_source = $detailBuku['path_gambar'])) {
+                                    $path = get_path_upload_gambar();
+                                    if (file_exists($path . DIRECTORY_SEPARATOR . "thumb-{$img_source}")) {
+                                        $img_source = get_base_url(basename($path) . "/thumb-{$img_source}");
+                                    } elseif (file_exists($path . DIRECTORY_SEPARATOR . "thumb-{$img_source}")) {
+                                        $img_source = get_base_url(basename($path) . "/thumb-{$img_source}");
+                                    } else {
+                                        $img_source = get_base_url('/assets/images/buku-placeholder.jpg');
+                                    }
+                                } else {
+                                    $img_source = get_base_url('/assets/images/buku-placeholder.jpg');
+                                }
+                                $judul = htmlspecialchars($detailBuku['judul']);
+                                $is_terpinjam = $detailBuku['anggota_id_pinjam'];
+                                $is_terpinjam = is_int(abs($is_terpinjam)) ? abs($is_terpinjam) : null;
+                                $is_terpinjam = $is_terpinjam && $is_terpinjam > 0;
+                                ?>
+                                <div class="col-md-4">
+                                  <div class="card card-clouds no-body">
+                                    <div class="card-header">
+                                      <div class="text-center" style="margin-bottom: 1em">
+                                        <img class="img-thumbnail img-responsive" align="center" width="200" height="200" src="<?= htmlspecialchars($img_source);?>" alt="<?= $judul;?>" title="<?= $judul;?>">
+                                      </div>
+                                      <table class="table table-responsive table-hover table-striped" style="font-size: 13px">
+                                        <tbody>
+                                          <tr>
+                                            <th>Pengarang</th>
+                                            <td><?= htmlentities($detailBuku['pengarang']);?></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Penerbit</th>
+                                            <td><?= htmlentities($detailBuku['penerbit']);?></td>
+                                          </tr>
+                                          <tr>
+                                            <th>Tahun</th>
+                                            <td><?= htmlentities($detailBuku['tahun']);?></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                      <div class="row">
+                                        <div class="col-sm-6">
+                                            <?php if ($is_terpinjam) { ?><span class="label label-info">Terpinjam</span><?php } ?>
+                                        </div>
+                                        <div class="col-sm-6">
+                                          <div class="pull-right">
+                                              <?php if(is_admin()) { ?><a href="<?=get_base_url_index('buku/ubah/'.$detailBuku['id']);?>" class="btn btn-primary btn-xs">Ubah</a>&nbsp;<?php } ?>
+                                            <a href="<?=get_base_url_index('buku/'.$detailBuku['id']);?>" class="btn btn-success btn-xs">&nbsp;Detail&nbsp;</a>
+                                          </div>
+                                          <div class="clearfix"></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <?php
+                            }
+                            echo "</div>\n";
+                    } ?>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-9 col-sm-9">
+                            <div class="form-group form-inline">
+                                <form method="GET" action="" style="margin-top: .5em">
+                                    <label for="paging">Menuju Halaman</label>&nbsp;
+                                    <select id="paging" class="form-control" name="page" onchange="window.location.href = '?page=' + this.options[this.options.selectedIndex].value">
+                                        <?php
+                                        foreach (range(1, $jumlah_halaman) as $value) {
+                                            $selected = $value === $current_page ? ' selected' : '';
+                                            ?>
+                                            <option value="<?= $value;?>"<?=$selected;?>>Halaman <?= $value;?></option>
+                                        <?php } ?>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="form-group text-center">
+                                <p style="margin-top: 1em">
+                                    <?php if ($jumlah_halaman > 1) { ?>
+                                        <?php if ($current_page > 1) {?>
+                                            <span class="page-selector"><a title="Halaman Sebelumnya" href="?page=<?= $current_page-1;?>"><i class="glyphicon glyphicon-chevron-left"></i></a></span>
+                                        <?php } else { ?>
+                                            <span class="page-selector"><i class="glyphicon glyphicon-chevron-left"></i></span>
+                                        <?php } ?>
+                                        <small>Navigasi Halaman</small>
+                                        <?php if ($current_page < $jumlah_halaman) {?>
+                                            <span class="page-selector"><a title="Halaman Selanjutnya" href="?page=<?= $current_page+1;?>"><i class="glyphicon glyphicon-chevron-right"></i></a></span>
+                                        <?php } else { ?>
+                                            <span class="page-selector"><i class="glyphicon glyphicon-chevron-right"></i></span>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- .panel -->
+        </div>
+    </div>
 <?php
 muat_layout('footer');

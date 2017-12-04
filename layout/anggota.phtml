@@ -7,11 +7,11 @@ muat_layout(
     ]
 );
 
-$page = get('page', 0);
-$total_anggota = database_get_jumlah_anggota();
+$page       = get('page', 0);
+$total_buku = database_get_jumlah_anggota();
 // list user perhalaman
 $per_halaman = 20;
-$jumlah_halaman = abs($total_anggota / $per_halaman);
+$jumlah_halaman = abs($total_buku / $per_halaman);
 $jumlah_halaman = intval($jumlah_halaman) + (!is_int($jumlah_halaman) ? 1 :0);
 $current_page = is_numeric($page) ? intval($page) : 0;
 $current_page = $current_page < 1 ? 1 : $current_page;
@@ -36,7 +36,7 @@ unset($loopAnggota);
               </div>
             <?php } ?>
           <div class="alert alert-info">
-            <p>Menampilkan <span class="label label-info"><?= count($anggota);?></span>  dari <span class="label label-success"><?= $total_anggota;?></span> anggota.</p>
+            <p>Menampilkan <span class="label label-info"><?= count($anggota);?></span>  dari <span class="label label-success"><?= $total_buku;?></span> anggota.</p>
           </div>
           <div class="panel panel-default">
             <div class="panel-heading">
