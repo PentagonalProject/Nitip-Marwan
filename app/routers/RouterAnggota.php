@@ -2,7 +2,7 @@
 class RouterAnggota
 {
     const MESSAGE_PROFILE_SIMPAN_SUKSES = '<div class="alert alert-success alert-dismissable">Akun Berhasil Diubah<div class="close" data-dismiss="alert" aria-label="close">&times;</div></div>';
-    const MESSAGE_PROFILE_SIMPAN_GAGAL  = '<div class="alert alert-danger alert-dismissable">Gagal Menimpan Data<div class="close" data-dismiss="alert" aria-label="close">&times;</div></div>';
+    const MESSAGE_PROFILE_SIMPAN_GAGAL  = '<div class="alert alert-danger alert-dismissable">Gagal Menyimpan Data<div class="close" data-dismiss="alert" aria-label="close">&times;</div></div>';
 
     public static function ApiCari($params)
     {
@@ -119,6 +119,7 @@ class RouterAnggota
                     : false;
                 $status = database_create_anggota($toSave);
                 if (is_object($status)) {
+                    delete_session('anggota_baru');
                     $user_id = database_get_anggota($toSave['user_name']);
                     $user_id = $user_id['id'];
                     redirect(get_base_url_index("anggota/ubah/{$user_id}?status=tambah"));
@@ -249,6 +250,25 @@ class RouterAnggota
                 : get_base_url_index('anggota');
             redirect($referer);
         }
+
+        $anggota_exist = database_get_anggota_by_id($user_id);
+        $url = get_base_url_index('anggota/hapus/'. $user_id);
+        if (get_method() === 'POST') {
+            $data = post('user');
+            if (empty($data['id']) || abs($data['id']) !== abs($user_id)) {
+                redirect($url.'?status=error');
+            }
+            $deleted = delete_anggota_by_id($data['id']);
+            if ($deleted) {
+                redirect(get_base_url_index('anggota?status=deleted'));
+            }
+            redirect($url.'?status=error');
+        }
+
+        if ($anggota_exist && get('status') === 'error') {
+            $params['message'] = '<div class="alert alert-danger alert-dismissable">Gagal Menghapus Anggota<div class="close" data-dismiss="alert" aria-label="close">&times;</div></div>';
+        }
+
         $params['user_id'] = $user_id;
         muat_layout('anggota-hapus', $params);
     }

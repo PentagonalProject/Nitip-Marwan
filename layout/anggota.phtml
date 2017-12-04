@@ -30,6 +30,11 @@ unset($loopAnggota);
       <div class="row">
         <div class="col-md-12">
           <p>&nbsp;</p>
+          <?php if (get('status') === 'deleted') { ?>
+              <div class="alert alert-success alert-dismissable">
+                Anggota Berhasil Dihapus<div class="close" data-dismiss="alert" aria-label="close">&times;</div>
+              </div>
+            <?php } ?>
           <div class="alert alert-info">
             <p>Menampilkan <span class="label label-info"><?= count($anggota);?></span>  dari <span class="label label-success"><?= $total_anggota;?></span> anggota.</p>
           </div>

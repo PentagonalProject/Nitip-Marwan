@@ -19,6 +19,12 @@ muat_layout(
                     <h1 class="panel-title">Hapus Anggota</h1>
                 </div>
                 <div class="panel-body">
+                    <?php
+                    if (!empty($variable['message'])
+                        && is_string($variable['message'])) {
+                        echo $variable['message'];
+                    }
+                    ?>
                     <?php if (count($current_user) === 0) { ?>
                         <div class="alert-warning alert">
                             <p>Data Anggota Tidak Tersedia atau Anggota ID Valid</p>
@@ -39,6 +45,7 @@ muat_layout(
                 </div>
                 <div class="panel-footer">
                     <form method="post" action="<?= get_base_url_index('anggota/hapus/'.$user_id);?>" onsubmit="return confirm('Apakah anda yakin ingin menghapus akun ini?');">
+                        <input type="hidden" name="user[id]" value="<?= $user_id;?>" class="hidden">
                         <div class="row">
                             <div class="col-md-4 col-sm-4">
                                 <button type="submit" class="btn btn-danger">Hapus</button>
