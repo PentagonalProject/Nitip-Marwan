@@ -33,13 +33,16 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
           judul:<?=json_encode(get_base_url_index('api/buku'));?>,
           buku_pengarang:<?=json_encode(get_base_url_index('api/buku-pengarang'));?>,
           pengarang:<?=json_encode(get_base_url_index('api/pengarang'));?>,
+          penerbit:<?=json_encode(get_base_url_index('api/penerbit'));?>,
           anggota:<?=json_encode(get_base_url_index('api/anggota'));?>
-
       };
+      var total_user = <?= abs(database_get_jumlah_anggota());?>;
   </script>
   <link rel="icon" href="<?= get_base_url('assets/images/favicon.ico');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/css/bootstrap.min.css');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/css/app.css');?>">
+  <link rel="stylesheet" href="<?= get_base_url('assets/css/select2.min.css');?>">
+  <link rel="stylesheet" href="<?= get_base_url('assets/js/bootstrap3-wysihtml5/bootstrap3-wysihtml5.css');?>">
 </head>
 <body class="<?= is_login() ? 'login' : 'tamu';?>">
   <div id="page" class="wrapper">

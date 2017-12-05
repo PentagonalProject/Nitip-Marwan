@@ -6,6 +6,145 @@ muat_layout(
         'title' => 'Daftar Pinjaman Anggota'
     ]
 );
+
+$page       = get('page', 0);
+$total_buku = database_get_jumlah_pinjaman();
+// list user perhalaman
+$per_halaman = 20;
+$jumlah_halaman = abs($total_buku / $per_halaman);
+$jumlah_halaman = intval($jumlah_halaman) + (!is_int($jumlah_halaman) ? 1 :0);
+$current_page = is_numeric($page) ? intval($page) : 0;
+$current_page = $current_page < 1 ? 1 : $current_page;
+$current_page = $current_page > $jumlah_halaman ? $jumlah_halaman : $current_page;
+$current_page = $current_page < 1 ? 1 : $current_page;
+$offset = ($current_page-1) * $per_halaman;
+// buat loop pinjaman
+$loopPinjaman = create_query_loop_buku_pinjaman($offset, $per_halaman);
+$loopPinjaman = ! $loopPinjaman ? [] : $loopPinjaman;
+$pinjaman = [];
+foreach ($loopPinjaman as $key => $value) {
+    $pinjaman[$key] = $value;
+}
+
+unset($loopPinjaman);
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <p>&nbsp;</p>
+            <div class="alert alert-info">
+                <p>Menampilkan <span class="label label-info"><?= count($pinjaman);?></span>  dari <span class="label label-success"><?= $total_buku;?></span> pinjaman.</p>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Daftar Pinjaman Anggota</h1>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-responsive table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="60" class="text-center">ID Buku</th>
+                            <th>Judul Buku</th>
+                            <th width="200">Username Anggota</th>
+                            <th width="150">Tanggal Pinjam</th>
+                            <th width="160">Tindakan</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if (count($pinjaman) > 0) { ?>
+                        <?php foreach ($pinjaman as $key => $value) {
+                            unset($pinjaman[$key]);
+                            ?>
+                            <tr>
+                                <td width="80" class="text-center"><?= $value['id'];?></td>
+                                <td><?php
+                                    $judul = substr($value['judul'], 0, 125);
+                                    if (strlen($judul) !== strlen($value['judul'])) {
+                                        $judul .= ' ...';
+                                    }
+                                    echo htmlentities($judul);
+                                    ?></td>
+                                <td width="180"><?php
+                                        $user = database_get_anggota_by_id($value['anggota_id_pinjam']);
+                                        if ($user) {
+                                            $userName = substr($user['user_name'], 0, 18);
+                                            if (strlen($userName) !== strlen($user['user_name'])) {
+                                                $userName .= ' ...';
+                                            }
+                                            echo $userName;
+                                        } else {
+                                            echo 'tidak diketahui';
+                                        }
+                                    ?></td>
+                                <td width="150">
+                                    <?php
+                                        $time = @strtotime($value['tanggal_pinjam']);
+                                        if (!$time) {
+                                            echo 'Tidak Diketahui';
+                                        } else {
+                                            echo date('Y-m-d H:i', $time);
+                                        }
+                                    ?>
+                                </td>
+                                <td width="160" class="text-center">
+                                    <a href="<?= get_base_url_index('/buku/ubah/'.$value['id']);?>" class="btn btn-primary btn-sm">Ubah</a>
+                                    <a href="<?= get_base_url_index('/buku/'.$value['id']);?>" class="btn btn-info btn-sm">Lihat Detail</a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td colspan="5">
+                                    <p>&nbsp;</p>
+                                    <div class="alert alert-info text-center">
+                                        <p>Belum Ada Pinjaman</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-9 col-sm-9">
+                            <div class="form-group form-inline">
+                                <form method="GET" action="" style="margin-top: .5em">
+                                    <label for="paging">Menuju Halaman</label>&nbsp;
+                                    <select id="paging" class="form-control" name="page" onchange="window.location.href = '?page=' + this.options[this.options.selectedIndex].value">
+                                        <?php
+                                        foreach (range(1, $jumlah_halaman) as $value) {
+                                            $selected = $value === $current_page ? ' selected' : '';
+                                            ?>
+                                            <option value="<?= $value;?>"<?=$selected;?>>Halaman <?= $value;?></option>
+                                        <?php } ?>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <div class="form-group text-center">
+                                <p style="margin-top: 1em">
+                                    <?php if ($jumlah_halaman > 1) { ?>
+                                        <?php if ($current_page > 1) {?>
+                                            <span class="page-selector"><a title="Halaman Sebelumnya" href="?page=<?= $current_page-1;?>"><i class="glyphicon glyphicon-chevron-left"></i></a></span>
+                                        <?php } else { ?>
+                                            <span class="page-selector"><i class="glyphicon glyphicon-chevron-left"></i></span>
+                                        <?php } ?>
+                                        <small>Navigasi Halaman</small>
+                                        <?php if ($current_page < $jumlah_halaman) {?>
+                                            <span class="page-selector"><a title="Halaman Selanjutnya" href="?page=<?= $current_page+1;?>"><i class="glyphicon glyphicon-chevron-right"></i></a></span>
+                                        <?php } else { ?>
+                                            <span class="page-selector"><i class="glyphicon glyphicon-chevron-right"></i></span>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- .panel -->
+        </div>
+    </div>
 <?php
 muat_layout('footer');

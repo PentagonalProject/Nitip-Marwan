@@ -1,4 +1,12 @@
 <?php
+$buku_id      = !empty($variable['buku_id'])
+    ? $variable['buku_id']
+    : null;
+
+$current_buku = $buku_id ? database_get_buku_by_id($buku_id) : [];
+if (!$current_buku) {
+    redirect(get_base_url_index('buku'));
+}
 // muat header
 muat_layout(
     'header',
@@ -7,5 +15,73 @@ muat_layout(
     ]
 );
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <p>&nbsp;</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Hapus Buku</h1>
+                </div>
+                <div class="panel-body">
+                    <?php
+                    if (!empty($variable['message'])
+                        && is_string($variable['message'])) {
+                        echo $variable['message'];
+                    }
+                    ?>
+                    <?php
+                    $pinjam = is_numeric($current_buku['anggota_id_pinjam']) > 0;
+                    if ($pinjam) {
+                            $userName = null;
+                            $user = database_get_anggota_by_id($current_buku['anggota_id_pinjam']);
+                            if ($user) {
+                                $userName = $user['user_name'];
+                            }
+                        ?>
+                        <div class="alert alert-warning text-center">
+                            <p>Buku ini sedang di pinjam <?= $userName ? "oleh <span class=\"label label-info\">{$userName}</span>":"";?>dan belum di tandai sebagai telah dikembalikan</p>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <?php if (count($current_buku) === 0) { ?>
+                        <div class="alert-warning alert">
+                            <p>Data Anggota Tidak Tersedia atau Anggota ID Valid</p>
+                        </div>
+                    <?php } else { ?>
+                        <div class="text-center">
+                            <p>&nbsp;</p>
+                            <p><strong>Apakah anda yakin ingin menghapus</strong></p>
+                            <p>Buku ID : <span class="btn btn-info"><?= $current_buku['id'];?></span></p>
+                            <p><br/><em><code>
+                                    <?= htmlentities($current_buku['judul']);?>
+                                    </code>
+                                </em></p>
+                            <p>&nbsp;</p>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="panel-footer">
+                    <form method="post" action="<?= get_base_url_index('buku/hapus/'.$buku_id);?>" onsubmit="return confirm('Apakah anda yakin ingin menghapus akun ini?');">
+                        <input type="hidden" name="user[id]" value="<?= $buku_id;?>" class="hidden">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4">
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </div>
+                            <div class="col-md-offset-4 col-md-4 col-sm-4">
+                                <?php
+                                $referer = isset($_SERVER['HTTP_REFERER']) && is_string($_SERVER['HTTP_REFERER'])
+                                           && strpos($_SERVER['HTTP_REFERER'], get_host()) !== false
+                                    ? $_SERVER['HTTP_REFERER']
+                                    : get_base_url_index('buku');
+                                ?>
+                                <a href="<?= $referer?>" class="btn btn-primary pull-right">Batalkan</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php
 muat_layout('footer');

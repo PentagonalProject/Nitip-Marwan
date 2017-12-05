@@ -6,6 +6,112 @@ muat_layout(
         'title' => 'Detail Buku'
     ]
 );
+$id         = isset($variable) && !empty($variable['id']) && is_numeric($variable['id'])
+    ? abs($variable['id'])
+    : null;
+$detailBuku = $id ? database_get_buku_by_id($id) : [];
+$detailBuku = !empty($detailBuku) ? $detailBuku : [];
+
+$thumbnail = get_base_url('/assets/images/buku-placeholder.jpg');
+$gambar_cover = null;
+if (($path_gambar = $detailBuku['path_gambar'])) {
+    $path = get_path_upload_gambar();
+    if (file_exists($path . DIRECTORY_SEPARATOR . $path_gambar)) {
+        $gambar_cover = get_base_url(basename($path) . "/{$path_gambar}");
+    }
+    if (file_exists($path . DIRECTORY_SEPARATOR . "thumb-{$path_gambar}")) {
+        $thumbnail = get_base_url(basename($path) . "/thumb-{$path_gambar}");
+    } elseif (file_exists($path . DIRECTORY_SEPARATOR . "thumb-{$path_gambar}")) {
+        $thumbnail = get_base_url(basename($path) . "/thumb-{$path_gambar}");
+    } else {
+        $thumbnail = get_base_url('/assets/images/buku-placeholder.jpg');
+    }
+}
+$is_terpinjam = $detailBuku['anggota_id_pinjam'];
+$is_terpinjam = is_int(abs($is_terpinjam)) ? abs($is_terpinjam) : null;
+$is_terpinjam = $is_terpinjam && $is_terpinjam > 0;
 ?>
+    <div class="row">
+        <div class="col-md-12">
+            <p>&nbsp;</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Detail Buku</h1>
+                </div>
+                <div class="panel-body">
+                    <?php if (count($detailBuku) === 0) { ?>
+                        <div class="alert alert-warning">
+                            <p>Buku dengan id: <?= $id;?> tidak ada.</p
+                        </div>
+                    <?php } else { ?>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center" style="margin-bottom: 1em">
+                                  <img class="img-thumbnail img-responsive" style="width:100%; max-width: 300px;height: auto" align="center" width="200" height="200" src="<?= htmlspecialchars($thumbnail);?>" alt="thumbnail" title="<?= htmlspecialchars($detailBuku['judul']);?>">
+                                </div>
+                                <div class="card card-clouds no-body">
+                                  <div class="card-header">
+                                    <table class="table table-responsive table-hover table-striped" style="font-size: 13px">
+                                      <tbody>
+                                      <tr>
+                                        <th>Judul</th>
+                                        <td><?= htmlentities($detailBuku['judul']);?></td>
+                                      </tr>
+                                      <tr>
+                                        <th>Pengarang</th>
+                                        <td><?= htmlentities($detailBuku['pengarang']);?></td>
+                                      </tr>
+                                      <tr>
+                                        <th>Penerbit</th>
+                                        <td><?= htmlentities($detailBuku['penerbit']);?></td>
+                                      </tr>
+                                      <tr>
+                                        <th>Tahun</th>
+                                        <td><?= htmlentities($detailBuku['tahun']);?></td>
+                                      </tr>
+                                      <tr>
+                                        <th>Status Buku</th>
+                                        <td><?= $is_terpinjam ? '<span class="label label-info">Buku Terpinjam</span>' : '<span class="label label-success">Buku Tersedia</span>';?></td>
+                                      </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="synopsis panel panel-primary">
+                                    <div class="panel-heading">
+                                        <p>Sinopsis</p>
+                                    </div>
+                                    <div class="panel-body">
+                                        <?php
+                                            if (trim($detailBuku['keterangan']) == '') {
+                                        ?>
+                                        <div class="alert alert-info">Tidak ada sinopsis</div>
+                                        <?php } else { ?><?= $detailBuku['keterangan'];?><?php } ?>
+                                    </div>
+                                </div>
+                                <div class="cover-gambar panel panel-primary">
+                                  <div class="panel-heading">
+                                    <p>Gambar Cover</p>
+                                  </div>
+                                  <div class="panel-body">
+                                      <?php
+                                      if (!$gambar_cover) {
+                                          ?>
+                                        <div class="alert alert-info">Tidak ada gambar cover</div>
+                                      <?php } else { ?>
+                                        <img src="<?= htmlspecialchars($gambar_cover);?>" alt="gambar cover" class="img-responsive">
+                                      <?php } ?>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php
 muat_layout('footer');

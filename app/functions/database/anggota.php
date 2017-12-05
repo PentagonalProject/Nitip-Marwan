@@ -286,7 +286,20 @@ function delete_anggota($username)
         return 0;
     }
 
-    return database_execute("DELETE FROM anggota WHERE user_name=?", [$username]);
+    $return = database_execute("DELETE FROM anggota WHERE user_name=?", [$username]);
+    if ($return) {
+        $id = database_get_anggota($username);
+        if (!empty($id['id'])) {
+            database_execute(
+                "UPDATE buku SET tanggal_pinjam=null, anggota_id_pinjam=null WHERE anggota_id_pinjam=?",
+                [
+                    $id['id']
+                ]
+            );
+        }
+    }
+
+    return $return;
 }
 
 /**
@@ -307,7 +320,19 @@ function delete_anggota_by_id($id)
         return 0;
     }
 
-    return database_execute("DELETE FROM anggota WHERE id=?", [$id]);
+    $return = database_execute("DELETE FROM anggota WHERE id=?", [$id]);
+    if ($return) {
+        if (!empty($id)) {
+            database_execute(
+                "UPDATE buku SET tanggal_pinjam=null, anggota_id_pinjam=null WHERE anggota_id_pinjam=?",
+                [
+                    $id
+                ]
+            );
+        }
+    }
+
+    return $return;
 }
 
 /**

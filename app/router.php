@@ -65,5 +65,6 @@ $this->addGroup('/api', function (\FastRoute\RouteCollector $r) use ($standardMe
     $r->addRoute($standardMethod, '/buku[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariBukuJudul');
     $r->addRoute($standardMethod, '/buku-pengarang[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariJudulBukuByPengarang');
     $r->addRoute($standardMethod, '/pengarang[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariPengarang');
+    $r->addRoute($standardMethod, '/penerbit[/[{nama: .*}[{slash: [/]+}]]]', 'RouterBuku::ApiCariPenerbit');
 
 });

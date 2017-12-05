@@ -6,112 +6,266 @@ muat_layout(
         'title' => 'Ubah Data Buku'
     ]
 );
-$id           = isset($variable) && isset($variable['id'])
+
+$id  = isset($variable) && isset($variable['id'])
     ? $variable['id']
-    : null;
+    : 0;
 $current_buku = database_get_buku_by_id($id);
+$terpinjam    = $current_buku['anggota_id_pinjam'];
+
 ?>
-    <div class="row">
-        <div class="col-md-12">
-            <br/>
-            <form method="post" action="<?= get_base_url_index('buku/ubah/'.$id);?>">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">Ubah Data Buku <span class="label label-info"><?= $current_buku['judul'];?></span></h1>
-                    </div>
-                    <div class="panel-body">
-                        <?php
-                        if (!empty($variable['message'])
-                            && is_string($variable['message'])) {
-                            echo $variable['message'];
-                        }
+  <div class="row">
+    <div class="col-md-12">
+      <br/>
+      <form method="post" action="<?= get_base_url_index('buku/ubah/' . $id); ?>" enctype="multipart/form-data">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h1 class="panel-title">Ubah Data Buku <span class="label label-info"><?= $current_buku['judul']; ?></span>
+            </h1>
+          </div>
+          <div class="panel-body">
+              <?php
+              if ( ! empty($variable['message'])
+                   && is_string($variable['message'])) {
+                  echo $variable['message'];
+              }
+              ?>
+            <p>
+              <small><em><strong><a href="<?= get_base_url_index('buku/hapus/' . $current_buku['id']); ?>"
+                                    style="color: #ff3535">Hapus Buku Ini</a></strong></em></small>
+            </p>
+            <table class="table table-responsive">
+                <?php
+                $list = [
+                    'judul'     => [
+                        'label' => 'Judul Buku',
+                        'input' => [
+                            'type'      => 'text',
+                            'maxlength' => '255',
+                            'value'     => $current_buku['judul']
+                        ]
+                    ],
+                    'pengarang' => [
+                        'label' => 'Pengarang Buku',
+                        'input' => [
+                            'type'              => 'text',
+                            'maxlength'         => '255',
+                            'data-autocomplete' => 'pengarang',
+                            'value'             => $current_buku['pengarang']
+                        ]
+                    ],
+                    'penerbit'  => [
+                        'label' => 'Penerbit Buku',
+                        'input' => [
+                            'type'              => 'text',
+                            'maxlength'         => '255',
+                            'data-autocomplete' => 'penerbit',
+                            'value'             => $current_buku['penerbit']
+                        ]
+                    ],
+                    'tahun'     => [
+                        'label' => 'Tahun Buku',
+                        'input' => [
+                            'type'      => 'number',
+                            'pattern'   => '[0-9]',
+                            'minlength' => 4,
+                            'maxlength' => 4,
+                            'min'       => 1800,
+                            'max'       => abs(date('Y')) + 20,
+                            'value'     => $current_buku['tahun']
+                        ]
+                    ],
+                    /*
+                    'tanggal_pinjam' => [
+                        'label' => 'Tanggal Peminjaman',
+                        'input' => [
+                            'type' => 'date',
+                            'value' => date('Y-m-d')
+                        ]
+                    ],*/
+                ];
+
+                foreach ($list as $name => $value) {
+                    if ( ! isset($value['input'])) {
                         ?>
-                        <p>
-                            <small><em><strong><a href="<?= get_base_url_index('buku/hapus/' . $current_buku['id']);?>" style="color: #ff3535">Hapus Buku Ini</a></strong></em></small>
-                        </p>
-                        <table class="table table-responsive">
+                      <tr>
+                        <td width="180">
+                          <label for="buku-<?= $name; ?>"><?= $value['label']; ?></label>
+                        </td>
+                        <td><?= $value['value']; ?></td>
+                      </tr>
+
+                        <?php
+                        continue;
+                    }
+                    $attr = "";
+                    foreach ($value['input'] as $k => $n) {
+                        $n    = htmlspecialchars($n, ENT_QUOTES);
+                        $attr .= "{$k}=\"{$n}\" ";
+                    }
+                    ?>
+                  <tr>
+                    <td width="180"><label for="buku-<?= $name; ?>"><?= $value['label']; ?></label></td>
+                    <td><input class="form-control" <?= $attr; ?>name="buku[<?= $name; ?>]" id="buku-<?= $name; ?>"
+                               placeholder="Masukkan <?= $value['label']; ?>"></td>
+                  </tr>
+
+                <?php } ?>
+              <tr>
+                <td width="180" style="vertical-align: top"><label for="buku-terpinjam">Status Pinjam</label></td>
+                <td>
+                  <p>
+                    <span class="label label-<?= $terpinjam ? 'info' : 'success'; ?>"><?= $terpinjam ? 'Terpinjam' : 'Tidak Terpinjam'; ?></span>
+                  </p>
+                  <table class="table table-responsive">
+                    <tbody>
+                    <tr>
+                      <td width="140"><label for="buku_anggota_id_pinjam">Username</label></td>
+                      <td>
+                        <select class="form-control select2" name="buku[anggota_id_pinjam]" id="buku_anggota_id_pinjam" data-target="anggota">
+                          <option value="0">Tidak Terpinjam</option>
                             <?php
-                            $list = [
-                                'judul'     => [
-                                    'label' => 'Judul Buku',
-                                    'input' => [
-                                        'type' => 'text',
-                                        'maxlength' => '255',
-                                        'value' => $current_buku['judul']
-                                    ]
-                                ],
-                                'pengarang' => [
-                                    'label' => 'Pengarang Buku',
-                                    'input' => [
-                                        'type' => 'text',
-                                        'maxlength' => '255',
-                                        'data-autocomplete' => 'pengarang',
-                                        'value' => $current_buku['pengarang']
-                                    ]
-                                ],
-                                'penerbit' => [
-                                    'label' => 'Penerbit Buku',
-                                    'input' => [
-                                        'type' => 'text',
-                                        'maxlength' => '255',
-                                        'data-autocomplete' => 'penerbit',
-                                        'value' => $current_buku['penerbit']
-                                    ]
-                                ],
-                                'tahun'  => [
-                                    'label' => 'Tahun Buku',
-                                    'input' => [
-                                        'type'     => 'number',
-                                        'pattern'  => '[0-9]',
-                                        'minlength' => 4,
-                                        'maxlength' => 4,
-                                        'min' => 1800,
-                                        'max' => abs(date('Y')) + 20,
-                                        'value' => $current_buku['tahun']
-                                    ]
-                                ],
-                                /*
-                                'tanggal_pinjam' => [
-                                    'label' => 'Tanggal Peminjaman',
-                                    'input' => [
-                                        'type' => 'date',
-                                        'value' => date('Y-m-d')
-                                    ]
-                                ],*/
-                            ];
-
-                            foreach ($list as $name => $value) {
-                                if (!isset($value['input'])) {
-                                    ?>
-                                    <tr>
-                                        <td width="180"><label for="buku-<?= $name;?>"><?=$value['label'];?></label></td>
-                                        <td><?= $value['value'];?></td>
-                                    </tr>
-
-                                    <?php
-                                    continue;
-                                }
-                                $attr = "";
-                                foreach ($value['input'] as $k => $n) {
-                                    $n = htmlspecialchars($n, ENT_QUOTES);
-                                    $attr .= "{$k}=\"{$n}\" ";
-                                }
+                            $daftar_anggota = create_query_loop_anggota(0, 100);
+                            $daftar_anggota = $daftar_anggota ? $daftar_anggota : [];
+                            foreach ($daftar_anggota as $anggota) {
+                              $selected = $terpinjam
+                                  && abs($current_buku['anggota_id_pinjam']) === abs($anggota['id'])
+                                  ? ' selected'
+                                  : '';
                                 ?>
-                                <tr>
-                                    <td width="180"><label for="buku-<?= $name;?>"><?=$value['label'];?></label></td>
-                                    <td><input class="form-control" <?= $attr;?>name="buku[<?= $name;?>]" id="buku-<?= $name;?>" placeholder="Masukkan <?= $value['label'];?>"></td>
-                                </tr>
+                              <option value="<?= $anggota['id']; ?>"<?=$selected;?>>
+                                  <?= $anggota['user_name']; ?>
+                                  <?= is_admin() ? ' - [admin] ' : ''; ?>
+                              </option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <p><small><em>Pilih: <span class="label label-info">Tidak Terpinjam</span> Untuk mengubah merubah status menjadi tidak terpinjam.</em></small></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="180">
+                        <label for="buku-pukul">Tanggal Peminjaman</label>
+                      </td>
+                      <td id="buku-pukul">
+                        <div class="form-group form-inline">
+                            <?php
+                            $waktu = time();
+                            if ($terpinjam) {
+                                $tmp_waktu = $current_buku['tanggal_pinjam'];
+                                $waktu     = is_string($tmp_waktu) && $tmp_waktu
+                                             && strtotime($tmp_waktu) > strtotime('1990-1-1')
+                                    ? strtotime($tmp_waktu)
+                                    : $waktu;
+                            }
 
-                            <?php } ?>
-                        </table>
-                    </div>
-                    <div class="panel-footer">
-                        <button type="submit" class="btn btn-primary pull-right">Simpan</button>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </form>
+                            $year   = abs(date('Y', $waktu));
+                            $month  = abs(date('m', $waktu));
+                            $hour   = abs(date('H', $waktu));
+                            $minute = abs(date('i', $waktu));
+                            $date   = abs(date('d', $waktu));
+                            ?>
+                          <label for="buku-pinjam-tahun">Tahun</label> &nbsp;&nbsp;
+                          <select class="form-control" id="buku-pinjam-tahun" name="buku[tanggal_pinjam][tahun]">
+                              <?php
+                              foreach (range(2000, date('Y')) as $tahun) {
+                                  $selected = $tahun === $year ? ' selected' : '';
+                                  ?>
+                                <option value="<?= $tahun; ?>"<?= $selected; ?>><?= $tahun; ?></option>
+                                  <?php
+                              }
+                              ?>
+                          </select>
+                          &nbsp;&nbsp;
+                          <label for="buku-pinjam-bulan">Bulan</label> &nbsp;&nbsp;
+                          <select class="form-control" id="buku-pinjam-bulan" name="buku[tanggal_pinjam][bulan]">
+                              <?php
+                              foreach (range(1, 12)as $bulan) {
+                                  $selected = $bulan === $month ? ' selected' : '';
+                                  ?>
+                                <option value="<?= $bulan; ?>"<?= $selected; ?>><?= $bulan; ?></option>
+                                  <?php
+                              }
+                              ?>
+                          </select>
+                          &nbsp;&nbsp;
+                          <label for="buku-pinjam-tanggal">Tanggal</label> &nbsp;&nbsp;
+                          <select class="form-control" id="buku-pinjam-tanggal" name="buku[tanggal_pinjam][tanggal]">
+                              <?php
+                              foreach (range(1, abs(date('t', strtotime($waktu))))as $tanggal) {
+                                  $tanggal = abs($tanggal);
+                                  $selected = $tanggal === $date ? ' selected' : '';
+                                  ?>
+                                <option value="<?= $tanggal; ?>"<?= $selected; ?>><?= $tanggal; ?></option>
+                                  <?php
+                              }
+                              ?>
+                          </select>
+                          &nbsp;&nbsp;
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="180">
+                        <label for="buku-pinjam-pukul">Jam Peminjaman</label>
+                      </td>
+                      <td id="buku-pukul">
+                        <div class="form-group form-inline">
+                          <label for="buku-pinjam-jam">Jam</label> &nbsp;&nbsp;
+                          <select name="buku[tanggal_pinjam][jam]" class="form-control" id="buku-pinjam-jam">
+                              <?php
+                              foreach (range(1, 24) as $v) {
+                                  $selected = $v === $hour ? ' selected' : '';
+                                  ?>
+                                <option value="<?= $v; ?>"<?= $selected; ?>><?= $v; ?></option>
+                                  <?php
+                              }
+                              ?>
+                          </select>
+                          &nbsp;&nbsp;
+                          <label for="buku-pinjam-menit">Menit</label> &nbsp;&nbsp;
+                          <select name="buku[tanggal_pinjam][menit]" class="form-control" id="buku-pinjam-menit">
+                              <?php
+                              foreach (range(0, 59) as $v) {
+                                  $selected = $v === $minute ? ' selected' : '';
+                                  ?>
+                                <option value="<?= $v; ?>"<?= $selected; ?>><?= $v; ?></option>
+                                  <?php
+                              }
+                              ?>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td width="180"><label for="buku-path_gambar">Cover Buku</label></td>
+                <td>
+                  <input class="form-control" type="file" name="buku[path_gambar]" id="buku-path_gambar" placeholder="Masukkan Gambar Cover Buku" accept="image/*">
+                  <div class="preview-gambar" data-preview="buku-path_gambar">
+                    <em><small>Pilih gambar untuk mengubah cover</small></em>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="vertical-align: top"><label for="buku-keterangan">Sinopsis</label></td>
+                <td>
+                  <textarea class="form-control" rows="5" name="buku[keterangan]" id="buku-keterangan"><?= $current_buku['keterangan']; ?></textarea>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="panel-footer">
+            <button type="submit" class="btn btn-primary pull-right">Simpan</button>
+            <div class="clearfix"></div>
+          </div>
         </div>
+      </form>
     </div>
+  </div>
 <?php
 muat_layout('footer');

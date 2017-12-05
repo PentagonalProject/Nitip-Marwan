@@ -20,7 +20,7 @@ function database_get_jumlah_pinjaman()
         $data = database_execute("
             SELECT COUNT(*) AS hitung FROM buku
             WHERE 
-              anggota_id_pinjam NOT NULL
+              anggota_id_pinjam IS NOT NULL
               OR anggota_id_pinjam <> 0
         ");
     } else {
@@ -32,6 +32,54 @@ function database_get_jumlah_pinjaman()
               anggota_id_pinjam=?
         ", [$id]);
     }
+
+    if ($data && !empty($data->fields['hitung'])) {
+        return abs($data->fields['hitung']);
+    }
+    return 0;
+}
+
+/**
+ * @param int $id
+ *
+ * @return float|int
+ */
+function database_get_jumlah_pinjaman_by_user_id($id)
+{
+    $user = database_get_anggota_by_id($id);
+    if ($user) {
+        return 0;
+    }
+    $id = $user['id'];
+    $data = database_execute("
+        SELECT COUNT(*) AS hitung FROM buku
+        WHERE 
+          anggota_id_pinjam=?
+    ", [$id]);
+
+    if ($data && !empty($data->fields['hitung'])) {
+        return abs($data->fields['hitung']);
+    }
+    return 0;
+}
+
+/**
+ * @param int $username
+ *
+ * @return float|int
+ */
+function database_get_jumlah_pinjaman_by_username($username)
+{
+    $user = database_get_anggota($username);
+    if ($user) {
+        return 0;
+    }
+    $id = $user['id'];
+    $data = database_execute("
+        SELECT COUNT(*) AS hitung FROM buku
+        WHERE 
+          anggota_id_pinjam=?
+    ", [$id]);
 
     if ($data && !empty($data->fields['hitung'])) {
         return abs($data->fields['hitung']);
@@ -52,6 +100,73 @@ function create_query_loop_buku($offset = 0, $limit = 100, $isDesc = true)
     $limit  = abs($limit);
     $isDesc = $isDesc ? " DESC " : "ASC";
     return database_execute("SELECT * FROM buku WHERE true ORDER BY id {$isDesc} LIMIT {$limit} OFFSET {$offset}");
+}
+
+/**
+ * @param int $offset
+ * @param int $limit
+ * @param bool $isDesc
+ *
+ * @return ADORecordSet_pdo
+ */
+function create_query_loop_buku_pinjaman($offset = 0, $limit = 100, $isDesc = true)
+{
+    $offset = abs($offset);
+    $limit  = abs($limit);
+    $isDesc = $isDesc ? " DESC " : "ASC";
+    return database_execute("SELECT * FROM buku WHERE anggota_id_pinjam IS NOT NULL AND anggota_id_pinjam > 0 ORDER BY id {$isDesc} LIMIT {$limit} OFFSET {$offset}");
+}
+
+/**
+ * @param int $user_id
+ * @param int $offset
+ * @param int $limit
+ * @param bool $isDesc
+ *
+ * @return ADORecordSet_pdo|false
+ */
+function create_query_loop_buku_pinjaman_by_user_id($user_id, $offset = 0, $limit = 100, $isDesc = true)
+{
+    $user = database_get_anggota_by_id($user_id);
+    if (!$user) {
+        return false;
+    }
+
+    $offset = abs($offset);
+    $limit  = abs($limit);
+    $isDesc = $isDesc ? " DESC " : "ASC";
+    return database_execute(
+        "SELECT * FROM buku WHERE anggota_id_pinjam =? ORDER BY id {$isDesc} LIMIT {$limit} OFFSET {$offset}",
+        [
+            $user_id
+        ]
+    );
+}
+
+/**
+ * @param int $username
+ * @param int $offset
+ * @param int $limit
+ * @param bool $isDesc
+ *
+ * @return ADORecordSet_pdo|false
+ */
+function create_query_loop_buku_pinjaman_by_username($username, $offset = 0, $limit = 100, $isDesc = true)
+{
+    $user = database_get_anggota($username);
+    if (!$user) {
+        return false;
+    }
+
+    $offset = abs($offset);
+    $limit  = abs($limit);
+    $isDesc = $isDesc ? " DESC " : "ASC";
+    return database_execute(
+        "SELECT * FROM buku WHERE anggota_id_pinjam =? ORDER BY id {$isDesc} LIMIT {$limit} OFFSET {$offset}",
+        [
+            $user['id']
+        ]
+    );
 }
 
 /**
@@ -135,6 +250,47 @@ function cari_buku_by_pengarang($nama_pengarang = '', $offset = 0, $limit = 100)
     }
     return $return;
 }
+/**
+ * @param string $nama_penerbit
+ * @param int $offset
+ * @param int $limit
+ *
+ * @return array|bool
+ */
+function cari_buku_by_penerbit($nama_penerbit = '', $offset = 0, $limit = 100)
+{
+    if (!is_string($nama_penerbit)) {
+        return false;
+    }
+    $offset = !is_numeric($offset) || !is_int(abs($offset)) ? 0 : abs($offset);
+    $limit = !is_numeric($limit) || is_int(abs($limit)) ? 100 : abs($limit);
+    $nama_penerbit = trim(strtolower($nama_penerbit));
+    if ($nama_penerbit == '') {
+        $loop = create_query_loop_buku($offset, $limit);
+    } else {
+        $loop = database_execute(
+            "SELECT * FROM buku
+            WHERE penerbit LIKE ? 
+            ORDER BY LOCATE(?, penerbit)
+            DESC
+            LIMIT {$limit}
+            OFFSET {$offset}
+        ",
+            [
+                "%{$nama_penerbit}%",
+                $nama_penerbit,
+            ]
+        );
+    }
+
+    $return = [];
+    if (is_object($loop) && !empty($loop->fields)) {
+        foreach ($loop as $key => $value) {
+            $return[] = $value;
+        }
+    }
+    return $return;
+}
 
 /**
  * @param string $nama_pengarang
@@ -153,14 +309,14 @@ function cari_pengarang_dari_buku($nama_pengarang = '', $offset = 0, $limit = 10
     $limit = !is_numeric($limit) || is_int(abs($limit)) ? 100 : abs($limit);
     $nama_pengarang = trim(strtolower($nama_pengarang));
     if ($nama_pengarang == '') {
-        $loop = database_execute("SELECT pengarang FROM buku WHERE true ORDER BY id GROUP BY pengarang LIMIT {$limit} OFFSET {$offset}");
+        $loop = database_execute("SELECT pengarang FROM buku WHERE true GROUP BY pengarang ORDER BY id LIMIT {$limit} OFFSET {$offset}");
     } else {
         $loop = database_execute(
             "SELECT pengarang FROM buku
-                WHERE pengarang LIKE ? 
+                WHERE pengarang LIKE ?
+                GROUP BY pengarang 
                 ORDER BY LOCATE(?, pengarang)
                 DESC
-                GROUP BY pengarang
                 LIMIT {$limit}
                 OFFSET {$offset}
             ",
@@ -174,9 +330,54 @@ function cari_pengarang_dari_buku($nama_pengarang = '', $offset = 0, $limit = 10
     $return = [];
     if (is_object($loop) && !empty($loop->fields)) {
         foreach ($loop as $key => $value) {
-            $return[] = $value;
+            $return[] = $value['pengarang'];
         }
     }
+    return $return;
+}
+
+/**
+ * @param string $nama_penerbit
+ * @param int $offset
+ * @param int $limit
+ *
+ * @return array|bool
+ */
+function cari_penerbit_dari_buku($nama_penerbit = '', $offset = 0, $limit = 100)
+{
+    if (!is_string($nama_penerbit)) {
+        return false;
+    }
+
+    $offset = !is_numeric($offset) || !is_int(abs($offset)) ? 0 : abs($offset);
+    $limit = !is_numeric($limit) || is_int(abs($limit)) ? 100 : abs($limit);
+    $nama_penerbit = trim(strtolower($nama_penerbit));
+    if ($nama_penerbit == '') {
+        $loop = database_execute("SELECT penerbit FROM buku WHERE true GROUP BY penerbit ORDER BY id LIMIT {$limit} OFFSET {$offset}");
+    } else {
+        $loop = database_execute(
+            "SELECT penerbit FROM buku
+                WHERE penerbit LIKE ?
+                GROUP BY penerbit
+                ORDER BY LOCATE(?, penerbit)
+                DESC
+                LIMIT {$limit}
+                OFFSET {$offset}
+            ",
+            [
+                "%{$nama_penerbit}%",
+                $nama_penerbit,
+            ]
+        );
+    }
+
+    $return = [];
+    if (is_object($loop) && !empty($loop->fields)) {
+        foreach ($loop as $key => $value) {
+            $return[] = $value['penerbit'];
+        }
+    }
+
     return $return;
 }
 
@@ -228,6 +429,60 @@ function database_create_buku(array $data)
 }
 
 /**
+ * @param int $buku_id
+ * @param array $data
+ *
+ * @return ADORecordSet_pdo|string string nama kolom apabila gagal
+ */
+function database_update_buku($buku_id, array $data)
+{
+    if (!database_get_buku_by_id($buku_id)) {
+        return false;
+    }
+
+    $fields = [
+        'judul',
+        'pengarang',
+        'penerbit',
+        'tahun',
+        'keterangan',
+        'path_gambar',
+        'anggota_id_pinjam',
+        'tanggal_pinjam',
+    ];
+
+    $values = [];
+    $set = '';
+    foreach ($data as $key => $value) {
+        if (!in_array($key, $fields)) {
+            continue;
+        }
+        if ($key === 'tahun') {
+            $value = (int) $value;
+        }
+        $values[$key] = $value;
+        $set .= "{$key}=?, ";
+    }
+
+    if (!isset($values['judul'])) {
+        return 'judul';
+    }
+    if (!isset($values['pengarang'])) {
+        return 'pengarang';
+    }
+    if (!isset($values['penerbit'])) {
+        return 'penerbit';
+    }
+    if (!isset($values['tahun'])) {
+        return 'tahun';
+    }
+
+    $set = 'SET '.trim($set, ', ');
+    $values[] = abs($buku_id);
+    return database_execute("UPDATE buku {$set} WHERE id=?", array_values($values));
+}
+
+/**
  * @param int $id
  *
  * @return bool|array
@@ -243,4 +498,56 @@ function database_get_buku_by_id($id)
     }
 
     return false;
+}
+
+/**
+ * @param int $id
+ *
+ * @return ADORecordSet_pdo|bool
+ */
+function database_get_pinjam_buku_by_id($id)
+{
+    if (!is_numeric($id)) {
+        return false;
+    }
+    $record = database_execute("SELECT * FROM buku WHERE anggota_id_pinjam=?", [abs($id)]);
+    return $record;
+}
+
+/**
+ * @param string $username
+ *
+ * @return ADORecordSet_pdo|bool
+ */
+function database_get_pinjam_buku_by_username($username)
+{
+    $user = database_get_anggota($username);
+    if (!$user) {
+        return false;
+    }
+
+    $record = database_execute("SELECT * FROM buku WHERE anggota_id_pinjam=?", [abs($user['id'])]);
+    if (! $record || isset($record->fields) || !is_array($record->fields)
+        || empty($record->fields)
+    ) {
+        return false;
+    }
+
+    return $record;
+}
+
+
+/**
+ * @param string $id
+ *
+ * @return ADORecordSet_pdo|bool|
+ */
+function delete_buku_by_id($id)
+{
+    if (!is_numeric($id)) {
+        return false;
+    }
+
+    $return = database_execute("DELETE FROM buku WHERE id=?", [$id]);
+    return $return;
 }

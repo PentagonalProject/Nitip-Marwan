@@ -12,6 +12,7 @@ $current_buku = [
     'tahun' => date('Y'),
     'pengarang' => '',
     'penerbit' => '',
+    'keterangan' => ''
 ];
 $current_buku_session = get_session('buku_baru');
 // hapus sesi
@@ -105,6 +106,12 @@ $current_buku         = array_merge($current_buku, $current_buku_session);
                                         <div class="preview-gambar" data-preview="buku-path_gambar">
                                         </div>
                                     </td>
+                                </tr>
+                                <tr>
+                                  <td style="vertical-align: top"><label for="buku-keterangan">Sinopsis</label></td>
+                                  <td>
+                                    <textarea class="form-control" rows="5" name="buku[keterangan]" id="buku-keterangan"><?= $current_buku['keterangan'];?></textarea>
+                                  </td>
                                 </tr>
                         <?php /*
                             <tr>

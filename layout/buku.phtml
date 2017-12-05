@@ -16,6 +16,8 @@ $jumlah_halaman = intval($jumlah_halaman) + (!is_int($jumlah_halaman) ? 1 :0);
 $current_page = is_numeric($page) ? intval($page) : 0;
 $current_page = $current_page < 1 ? 1 : $current_page;
 $current_page = $current_page > $jumlah_halaman ? $jumlah_halaman : $current_page;
+$current_page = $current_page < 1 ? 1 : $current_page;
+
 $offset = ($current_page-1) * $per_halaman;
 
 // buat loop anggota
@@ -89,13 +91,16 @@ unset($value, $loopBuku);
                                         </tbody>
                                       </table>
                                       <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-md-3">
                                             <?php if ($is_terpinjam) { ?><span class="label label-info">Terpinjam</span><?php } ?>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-md-9">
                                           <div class="pull-right">
-                                              <?php if(is_admin()) { ?><a href="<?=get_base_url_index('buku/ubah/'.$detailBuku['id']);?>" class="btn btn-primary btn-xs">Ubah</a>&nbsp;<?php } ?>
-                                            <a href="<?=get_base_url_index('buku/'.$detailBuku['id']);?>" class="btn btn-success btn-xs">&nbsp;Detail&nbsp;</a>
+                                              <?php if(is_admin()) { ?>
+                                                <a href="<?=get_base_url_index('buku/hapus/'.$detailBuku['id']);?>" class="btn btn-danger btn-xs" style="margin-bottom: 5px;">Hapus</a>&nbsp;
+                                                <a href="<?=get_base_url_index('buku/ubah/'.$detailBuku['id']);?>" class="btn btn-primary btn-xs" style="margin-bottom: 5px;">Ubah</a>&nbsp;
+                                              <?php } ?>
+                                            <a href="<?=get_base_url_index('buku/'.$detailBuku['id']);?>" class="btn btn-success btn-xs" style="margin-bottom: 5px;">&nbsp;Detail&nbsp;</a>
                                           </div>
                                           <div class="clearfix"></div>
                                         </div>

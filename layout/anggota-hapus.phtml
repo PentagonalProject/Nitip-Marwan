@@ -3,6 +3,10 @@ $user_id = !empty($variable['user_id'])
     ? $variable['user_id']
     : null;
 $current_user = $user_id ? database_get_anggota_by_id($user_id) : [];
+if (!$current_user) {
+    redirect(get_base_url_index('anggota'));
+}
+
 // muat header
 muat_layout(
     'header',
@@ -23,6 +27,17 @@ muat_layout(
                     if (!empty($variable['message'])
                         && is_string($variable['message'])) {
                         echo $variable['message'];
+                    }
+                    ?>
+                    <?php
+                    $pinjam = database_get_pinjam_buku_by_id($current_user['id']);
+                    if ($pinjam) {
+                        ?>
+                      <div class="alert alert-warning text-center">
+                        <p>Anggota ini telah meminjam buku dan belum di tandai sebagai telah dikembalikan</p>
+                        <p>Apabila anda menghapus anggota ini, maka buku akan ditandai sebagai belum terpinjam.</p>
+                      </div>
+                        <?php
                     }
                     ?>
                     <?php if (count($current_user) === 0) { ?>
