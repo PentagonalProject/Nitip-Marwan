@@ -28,7 +28,7 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
   <script type="text/javascript">
       // replace no-js with js
       document.documentElement.className = document.documentElement.className.replace("no-js","js");
-      var api_url = {
+      <?php if (is_login()) { ?>var api_url = {
           base : <?=json_encode(get_base_url_index('api'));?>,
           judul:<?=json_encode(get_base_url_index('api/buku'));?>,
           buku_pengarang:<?=json_encode(get_base_url_index('api/buku-pengarang'));?>,
@@ -36,7 +36,8 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
           penerbit:<?=json_encode(get_base_url_index('api/penerbit'));?>,
           anggota:<?=json_encode(get_base_url_index('api/anggota'));?>
       };
-      var total_user = <?= abs(database_get_jumlah_anggota());?>;
+      var total_user = <?= abs(database_get_jumlah_anggota());?>;<?php } ?>
+
   </script>
   <link rel="icon" href="<?= get_base_url('assets/images/favicon.ico');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/css/bootstrap.min.css');?>">
@@ -44,7 +45,7 @@ $first_name = ucfirst(strtolower((string)array_shift($first_name)));
   <link rel="stylesheet" href="<?= get_base_url('assets/css/select2.min.css');?>">
   <link rel="stylesheet" href="<?= get_base_url('assets/js/bootstrap3-wysihtml5/bootstrap3-wysihtml5.css');?>">
 </head>
-<body class="<?= is_login() ? 'login' : 'tamu';?>">
+<body class="<?= is_login() ? 'login' : 'tamu';?><?= isset($error) && $error ? ' is_error' : '';?><?= isset($variable) && isset($variable['is_login_page']) && $variable['is_login_page'] ? ' login_page' : '';?>">
   <div id="page" class="wrapper">
     <div class="container-fluid">
 <?php

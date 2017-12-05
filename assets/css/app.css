@@ -196,7 +196,7 @@ body {
 
 /* Apabila Belum Login
  -------------------------- */
-body.tamu {
+body.login_page {
     background-color: #34495e;
 }
 
