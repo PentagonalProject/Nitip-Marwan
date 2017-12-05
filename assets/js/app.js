@@ -159,8 +159,9 @@
                                 }
                             ];
                             $.map(data.data, function (data) {
+                                var username = data['user_name'] + (parseInt(data['is_admin']) ? ' - [admin]' : '');
                                 result.push({
-                                    text: data['user_name'] + (data['is_admin'] ? ' - [admin]' : ''),
+                                    text: username,
                                     id: data.id
                                 });
                             });

@@ -135,7 +135,7 @@ $terpinjam    = $current_buku['anggota_id_pinjam'];
                                 ?>
                               <option value="<?= $anggota['id']; ?>"<?=$selected;?>>
                                   <?= $anggota['user_name']; ?>
-                                  <?= is_admin() ? ' - [admin] ' : ''; ?>
+                                  <?= $anggota['is_admin'] ? ' - [admin] ' : ''; ?>
                               </option>
                                 <?php
                             }

@@ -75,6 +75,21 @@ $is_terpinjam = $is_terpinjam && $is_terpinjam > 0;
                                       </tr>
                                       </tbody>
                                     </table>
+                                      <?php
+                                        if ($is_terpinjam && abs($detailBuku['anggota_id_pinjam']) === get_current_user_id()) {
+                                            $time = @strtotime($detailBuku['tanggal_pinjam']);
+                                            $echo = '';
+                                            if ($time) {
+                                                $date_pinjam = date('d \b\u\l\a\n m, Y', $time);
+                                                $pukul_pinjam = date('\(H:i\)', $time);
+                                                $echo = "<br/><br/>Pada : Tanggal {$date_pinjam} <br/>Pukul: <strong>{$pukul_pinjam}</strong>";
+                                            }
+                                        ?>
+                                        <div class="alert alert-info">
+                                          Anda meminjam buku ini
+                                          <?= $echo;?>
+                                        </div>
+                                      <?php } ?>
                                   </div>
                                 </div>
                             </div>
