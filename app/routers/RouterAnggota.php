@@ -45,7 +45,7 @@ class RouterAnggota
         exit(0);
     }
 
-    public static function List($params)
+    public static function Listing($params)
     {
         check_redirect_admin_router();
         muat_layout('anggota', $params);
