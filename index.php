@@ -43,7 +43,8 @@ $dispatcher = FastRoute\SimpleDispatcher(function (\FastRoute\RouteCollector $r)
         require_once __DIR__ . '/app/router.php';
     };
     // binding ke \FastRoute\RouteCollector
-    $require->call($r);
+    $require = $require->bindTo($r);
+    $require();
 });
 
 $uri = get_request_uri();
