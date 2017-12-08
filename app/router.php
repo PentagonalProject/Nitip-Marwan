@@ -27,14 +27,14 @@ $this->addRoute($allMethods, '/{match: (?i)masuk}[/]', 'RouterBase::Masuk');   /
 $this->addRoute($standardMethod, '/profile[/]', 'RouterAnggota::Profile');
 // ANGGOTA
 $this->addGroup('/anggota', function (\FastRoute\RouteCollector $r) use ($standardMethod) {
-    $r->addRoute($standardMethod, '[/]', 'RouterAnggota::List');
+    $r->addRoute($standardMethod, '[/]', 'RouterAnggota::Listing');
     $r->addRoute($standardMethod, '/baru[/]', 'RouterAnggota::Baru');
     $r->addRoute($standardMethod, '/{action: (?i)ubah}[/[{id: (?i)(?:[0-9]+)}[/]]]', 'RouterAnggota::Ubah');
     $r->addRoute($standardMethod, '/{action: (?i)hapus}[/[{id: (?i)(?:[0-9]+)}[/]]]', 'RouterAnggota::Hapus');
 });
 // BUKU
 $this->addGroup('/buku', function (\FastRoute\RouteCollector $r) use ($standardMethod) {
-    $r->addRoute($standardMethod, '[/]', 'RouterBuku::List');
+    $r->addRoute($standardMethod, '[/]', 'RouterBuku::Listing');
 
     $r->addRoute($standardMethod, '/baru[/]', 'RouterBuku::Baru');
     $r->addRoute($standardMethod, '/{action: (?i)ubah}[/[{id: \d+}[/]]]', 'RouterBuku::Ubah');
