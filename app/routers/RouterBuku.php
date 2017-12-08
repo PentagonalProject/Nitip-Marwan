@@ -583,7 +583,7 @@ class RouterBuku
         muat_layout('buku-detail', $params);
     }
 
-    public static function List($params)
+    public static function Listing($params)
     {
         check_redirect_login_router();
         muat_layout('buku', $params);
